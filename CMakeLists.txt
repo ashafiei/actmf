@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 2.6)
 
-project (tmf)
+project (actmf)
 
 set (VERSION_MAJOR 1)
 set (VERSION_MINOR 0)

@@ -1,7 +1,7 @@
-1) Tiny Multimedia Framework (tmf)
+1) Act Multimedia Framework (actmf)
 ===============================
 
-Tiny Multimedia Framework is a simple multimedia framework to implement multimedia applications. A multimedia application consists of a pipeline and a series of filters connected to each other. An application developer need to know about filter types, and how to connect them to each other.
+Act Multimedia Framework is a simple multimedia framework to implement multimedia applications. A multimedia application consists of a pipeline and a series of filters connected to each other. An application developer need to know about filter types, and how to connect them to each other.
 
 Each filter has a number of input and output ports. Each port has a buffer type and can be connected to other ports with the same type of data. Filters with same type of ports can be connected to each other. A port put the data on its buffer and all consumers are notified.
 
@@ -15,7 +15,7 @@ Here is how the project is organized.
 	build
 	core (core package)
 	doc
-	examples (contains examples using tmf library)
+	examples (contains examples using actmf library)
 	filters (implementation of the filters)
 	  basic
 	  libav
@@ -24,8 +24,8 @@ Here is how the project is organized.
 	CMakeLists.txt
 	LICENCE
 	README.md
-	tmf.doxyfile
-	tmf.kdev4
+	actmf.doxyfile
+	actmf.kdev4
 
 3) Installation
 ===============
@@ -46,9 +46,9 @@ Before compilation make sure that the following libraries are installed:
 
 4) Development envirement
 ======================
-Tiny Multimedia Framework is configured to be developed under KDevelop IDE.
+Act Multimedia Framework is configured to be developed under KDevelop IDE.
 	
-	kdevelop -p tmf.kdev4
+	kdevelop -p actmf.kdev4
 	
 The build directory:
 
