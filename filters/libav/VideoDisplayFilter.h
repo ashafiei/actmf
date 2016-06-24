@@ -23,7 +23,7 @@
 #ifndef VIDEODISPLAYFILTER_H_
 #define VIDEODISPLAYFILTER_H_
 
-#include "core/actmf.h"
+#include "core/Factory.h"
 #include "core/Filter.h"
 #include "core/Port.h"
 #include "types/RawFrame.h"

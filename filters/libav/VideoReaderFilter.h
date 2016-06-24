@@ -23,7 +23,7 @@
 #ifndef VIDEOREADERFILTER_H_
 #define VIDEOREADERFILTER_H_
 
-#include "core/actmf.h"
+#include "core/Factory.h"
 #include "core/Filter.h"
 #include "core/Port.h"
 #include "tools/VideoReader.h"

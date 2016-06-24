@@ -23,7 +23,7 @@
 #ifndef ADD2FILTER_H_
 #define ADD2FILTER_H_
 
-#include "core/actmf.h"
+#include "core/Factory.h"
 #include "core/Filter.h"
 #include "core/Port.h"
 

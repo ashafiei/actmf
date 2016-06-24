@@ -25,7 +25,7 @@
 
 #include "core/Filter.h"
 #include "core/Port.h"
-#include "core/actmf.h"
+#include "core/Factory.h"
 
 #include <iostream>
 #include <string>

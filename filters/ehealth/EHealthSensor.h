@@ -23,7 +23,7 @@
 #ifndef EHEALTHSENSOR_H_
 #define EHEALTHSENSOR_H_
 
-#include "core/actmf.h"
+#include "core/Factory.h"
 #include "core/Filter.h"
 #include "core/Port.h"
 

@@ -23,7 +23,7 @@
 #ifndef IMAGESCALERFILTER_H_
 #define IMAGESCALERFILTER_H_
 
-#include "core/actmf.h"
+#include "core/Factory.h"
 #include "tools/ImageScaler.h"
 #include "core/Filter.h"
 #include "core/Port.h"

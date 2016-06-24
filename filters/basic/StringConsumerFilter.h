@@ -23,7 +23,7 @@
 #ifndef STRINGCONSUMERFILTER_H_
 #define STRINGCONSUMERFILTER_H_
 
-#include "core/actmf.h"
+#include "core/Factory.h"
 #include "core/Port.h"
 #include "core/Filter.h"
 

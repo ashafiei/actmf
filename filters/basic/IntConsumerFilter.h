@@ -23,7 +23,7 @@
 #ifndef INTCONSUMERFILTER_H_
 #define INTCONSUMERFILTER_H_
 
-#include "core/actmf.h"
+#include "core/Factory.h"
 #include "core/Port.h"
 #include "core/Filter.h"
 

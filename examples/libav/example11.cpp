@@ -20,7 +20,7 @@
  *
  */
 
-#include "core/actmf.h"
+#include "core/Factory.h"
 
 using namespace std;
 using namespace actmf;

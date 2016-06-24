@@ -24,7 +24,7 @@
 #define DUPLICATEFILTER_H_
 
 #include "core/Filter.h"
-#include "core/actmf.h"
+#include "core/Factory.h"
 
 #include <unistd.h>
 #include <iostream>

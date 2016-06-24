@@ -23,7 +23,7 @@
 #ifndef VIDEOENCODERFILTER_H_
 #define VIDEOENCODERFILTER_H_
 
-#include "core/actmf.h"
+#include "core/Factory.h"
 #include "core/Filter.h"
 #include "core/Port.h"
 #include "filters/libav/types/RawFrame.h"

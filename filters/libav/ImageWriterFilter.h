@@ -22,7 +22,7 @@
 #ifndef IMAGEWRITERFILTER_H_
 #define IMAGEWRITERFILTER_H_
 
-#include "core/actmf.h"
+#include "core/Factory.h"
 #include "core/Port.h"
 #include "core/Filter.h"
 #include "tools/ImageWriter.h"

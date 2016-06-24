@@ -23,7 +23,7 @@
 #ifndef INTPRODUCERFILTER_H_
 #define INTPRODUCERFILTER_H_ 
 
-#include "core/actmf.h"
+#include "core/Factory.h"
 #include "core/Filter.h"
 #include "core/Port.h"
 

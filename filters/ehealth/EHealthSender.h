@@ -22,7 +22,7 @@
 #ifndef EHEALTHSENDER_H_
 #define EHEALTHSENDER_H_
 
-#include "core/actmf.h"
+#include "core/Factory.h"
 #include "core/Filter.h"
 #include "core/Port.h"
 
