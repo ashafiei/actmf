@@ -1,5 +1,5 @@
 /*
- * Act Multimedia Framework (actmf)
+ * Actor Multimedia Framework (actmf)
  * Copyright (C) 2016  Arash Shafiei
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -17,23 +17,23 @@
  * 
  */
 
-#ifndef FACTORY_H
-#define FACTORY_H
+#ifndef ACTMF_FACTORY_H
+#define ACTMF_FACTORY_H
 
 namespace actmf {
   
-  class Factory
+  class factory
   {
   private:
     int x;
   public:
-    Factory();
-    Factory(const Factory& other);
-    ~Factory();
-    Factory& operator=(const Factory& other);
-    bool operator==(const Factory& other) const;
+    factory();
+    factory(const factory& other);
+    ~factory();
+    factory& operator=(const factory& other);
+    bool operator==(const factory& other) const;
   };
  
 }
 
-#endif // FACTORY_H
+#endif // ACTMF_FACTORY_H

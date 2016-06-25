@@ -1,6 +1,6 @@
 /*
- * <one line to give the library's name and an idea of what it does.>
- * Copyright (C) 2016  <copyright holder> <email>
+ * Actor Multimedia Framework (actmf)
+ * Copyright (C) 2016  Arash Shafiei
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,31 +17,31 @@
  * 
  */
 
-#include "actor.h"
+#include "actmf/factory.h"
 
 using namespace actmf;
 
-Actor::Actor()
+factory::factory()
 {
 
 }
 
-Actor::Actor(const Actor& other)
+factory::factory(const factory& other)
 {
 
 }
 
-Actor::~Actor()
+factory::~factory()
 {
 
 }
 
-Actor& Actor::operator=(const Actor& other)
+factory& factory::operator=(const factory& other)
 {
 
 }
 
-bool Actor::operator==(const Actor& other) const
+bool factory::operator==(const factory& other) const
 {
 
 }

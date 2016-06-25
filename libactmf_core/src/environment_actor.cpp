@@ -1,5 +1,5 @@
 /*
- * Act Multimedia Framework (actmf)
+ * Actor Multimedia Framework (actmf)
  * Copyright (C) 2016  Arash Shafiei
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -17,31 +17,31 @@
  * 
  */
 
-#include "factory.h"
+#include "actmf/environment_actor.h"
 
 using namespace actmf;
 
-Factory::Factory()
+environment::environment()
 {
 
 }
 
-Factory::Factory(const Factory& other)
+environment::environment(const environment& other)
 {
 
 }
 
-Factory::~Factory()
+environment::~environment()
 {
 
 }
 
-Factory& Factory::operator=(const Factory& other)
+environment& environment::operator=(const environment& other)
 {
 
 }
 
-bool Factory::operator==(const Factory& other) const
+bool environment::operator==(const environment& other) const
 {
 
 }
