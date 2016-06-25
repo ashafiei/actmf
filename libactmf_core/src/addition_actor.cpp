@@ -17,9 +17,31 @@
  * 
  */
 
-#include <iostream>
+#include "actmf/addition_actor.h"
 
-int main(int argc, char ** argv) {
+using namespace actmf;
 
-  return 0;
+addition::addition()
+{
+
+}
+
+addition::addition(const addition& other)
+{
+
+}
+
+addition::~addition()
+{
+
+}
+
+addition& addition::operator=(const addition& other)
+{
+
+}
+
+bool addition::operator==(const addition& other) const
+{
+
 }

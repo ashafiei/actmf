@@ -17,23 +17,25 @@
  * 
  */
 
-#ifndef ACTMF_FACTORY_H
-#define ACTMF_FACTORY_H
+#ifndef ACTMF_ADDITION_ACTOR_H
+#define ACTMF_ADDITION_ACTOR_H
+
+#include "caf/all.hpp"
 
 namespace actmf {
   
-  class factory
+  class addition : public caf::event_based_actor
   {
   private:
     int x;
   public:
-    factory();
-    factory(const factory& other);
-    ~factory();
-    factory& operator=(const factory& other);
-    bool operator==(const factory& other) const;
+    addition();
+    addition(const addition& other);
+    ~addition();
+    addition& operator=(const addition& other);
+    bool operator==(const addition& other) const;
   };
  
 }
 
-#endif // ACTMF_FACTORY_H
+#endif // ACTMF_ADDITION_ACTOR_H

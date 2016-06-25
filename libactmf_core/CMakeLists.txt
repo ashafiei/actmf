@@ -5,7 +5,6 @@ project (actmf_core)
 file(GLOB_RECURSE LIB_ACTMF_HDRS "actmf/*.cpp")
 file(GLOB_RECURSE LIB_ACTMF_SRC "src/*.cpp")
 
-include_directories(".")
 
 add_library(${PROJECT_NAME} SHARED ${LIB_ACTMF_HDRS} ${LIB_ACTMF_SRC})
 

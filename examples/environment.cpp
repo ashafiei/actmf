@@ -17,31 +17,10 @@
  * 
  */
 
-#include "actmf/factory.h"
+#include <iostream>
+#include "actmf/all.h"
 
-using namespace actmf;
+int main(int argc, char ** argv) {
 
-factory::factory()
-{
-
-}
-
-factory::factory(const factory& other)
-{
-
-}
-
-factory::~factory()
-{
-
-}
-
-factory& factory::operator=(const factory& other)
-{
-
-}
-
-bool factory::operator==(const factory& other) const
-{
-
+  return 0;
 }
