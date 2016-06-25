@@ -21,27 +21,19 @@
 
 using namespace actmf;
 
-addition::addition()
-{
+using direct_atom = caf::atom_constant<caf::atom("direct")>;
+using add_atom = caf::atom_constant<caf::atom("add")>;
 
+caf::behavior addition_actor::awaiting_task()
+{
+    return {
+      [=](add_atom add, int x, int y) {
+	
+       
+      },
+      [=](direct_atom direct, const std::string& host, int16_t port) {
+       
+      }
+    };
 }
 
-addition::addition(const addition& other)
-{
-
-}
-
-addition::~addition()
-{
-
-}
-
-addition& addition::operator=(const addition& other)
-{
-
-}
-
-bool addition::operator==(const addition& other) const
-{
-
-}

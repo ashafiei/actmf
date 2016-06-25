@@ -20,20 +20,18 @@
 #ifndef ACTMF_ADDITION_ACTOR_H
 #define ACTMF_ADDITION_ACTOR_H
 
-#include "caf/all.hpp"
+#include "actmf/abstract_actor.h"
 
 namespace actmf {
   
-  class addition : public caf::event_based_actor
+  class addition_actor : public actmf::abstract_actor
   {
   private:
-    int x;
+  protected:
+    virtual caf::behavior awaiting_task();
   public:
-    addition();
-    addition(const addition& other);
-    ~addition();
-    addition& operator=(const addition& other);
-    bool operator==(const addition& other) const;
+    addition_actor(const std::__cxx11::string& host, int16_t port) : abstract_actor(host, port) {};
+    ~addition_actor() {}
   };
  
 }

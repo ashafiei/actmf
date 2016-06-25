@@ -20,18 +20,20 @@
 #ifndef ACTMF_ENVIRONMENT_H
 #define ACTMF_ENVIRONMENT_H
 
-#include "caf/all.hpp"
+#include "actmf/abstract_actor.h"
+
 
 namespace actmf {
   
-  class environment : public caf::event_based_actor 
+  class environment_actor : public actmf::abstract_actor
   {
+  private:
+
+  protected:
+    virtual caf::behavior awaiting_task();
   public:
-    environment();
-    environment(const environment& other);
-    ~environment();
-    environment& operator=(const environment& other);
-    bool operator==(const environment& other) const;
+    environment_actor(const std::__cxx11::string& host, int16_t port) : abstract_actor(host, port) {};
+    ~environment_actor() {}
   };
 }
 

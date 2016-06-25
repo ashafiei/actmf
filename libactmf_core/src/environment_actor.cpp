@@ -21,27 +21,17 @@
 
 using namespace actmf;
 
-environment::environment()
+using register_atom = caf::atom_constant<caf::atom("register")>;
+using create_app_atom = caf::atom_constant<caf::atom("create_app")>;
+
+caf::behavior environment_actor::awaiting_task()
 {
-
-}
-
-environment::environment(const environment& other)
-{
-
-}
-
-environment::~environment()
-{
-
-}
-
-environment& environment::operator=(const environment& other)
-{
-
-}
-
-bool environment::operator==(const environment& other) const
-{
-
+    return {
+      [=](register_atom reg, caf::atom_value actname, std::string& host, int16_t port) {
+       
+      },
+      [=](create_app_atom create, const std::string& conf) {
+       
+      }
+    };
 }

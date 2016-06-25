@@ -22,5 +22,11 @@
 
 int main(int argc, char ** argv) {
 
+  std::string host = "localhost";
+  int16_t port = 5000;
+  caf::actor env = caf::spawn<actmf::environment_actor>(host, port);
+  caf::await_all_actors_done();
+  caf::shutdown();
+  
   return 0;
 }
