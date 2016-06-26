@@ -17,19 +17,17 @@
  * 
  */
 
-#include "actmf/addition_actor.h"
+#include "actmf/disp_num_actor.h"
 
 using namespace actmf;
 
-using add_atom = caf::atom_constant<caf::atom("add")>;
+using disp_num_atom = caf::atom_constant<caf::atom("dis_num")>;
 
-caf::behavior addition_actor::awaiting_task()
+caf::behavior disp_num_actor::awaiting_task()
 {
-    return {
-      [=](add_atom add, int x, int y) {
-	
+  return {
+    [=](disp_num_atom disp_num) {
        
-      }
-    };
+    }
+  };
 }
-

@@ -17,19 +17,18 @@
  * 
  */
 
-#include "actmf/addition_actor.h"
+#include "actmf/gen_num_actor.h"
 
 using namespace actmf;
 
-using add_atom = caf::atom_constant<caf::atom("add")>;
+using generate_atom = caf::atom_constant<caf::atom("generate")>;
 
-caf::behavior addition_actor::awaiting_task()
+caf::behavior gen_num_actor::awaiting_task()
 {
-    return {
-      [=](add_atom add, int x, int y) {
-	
+  return {
+    [=](generate_atom generate) {
        
-      }
-    };
+    }
+  };
 }
 

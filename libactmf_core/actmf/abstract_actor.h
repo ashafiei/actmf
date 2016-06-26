@@ -28,7 +28,7 @@ namespace actmf {
   {
   protected:
     virtual caf::behavior awaiting_task() = 0;
-    
+    caf::behavior awaiting_direction();
   private:
     std::string host;
     uint16_t port;

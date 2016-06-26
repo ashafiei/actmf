@@ -17,19 +17,23 @@
  * 
  */
 
-#include "actmf/addition_actor.h"
+#ifndef ACTMF_GEN_NUM_ACTOR_H
+#define ACTMF_GEN_NUM_ACTOR_H
 
-using namespace actmf;
+#include "actmf/abstract_actor.h"
 
-using add_atom = caf::atom_constant<caf::atom("add")>;
-
-caf::behavior addition_actor::awaiting_task()
-{
-    return {
-      [=](add_atom add, int x, int y) {
-	
-       
-      }
-    };
+namespace actmf {
+  
+  class gen_num_actor : public actmf::abstract_actor
+  {
+  private:
+  protected:
+    virtual caf::behavior awaiting_task();
+  public:
+    gen_num_actor(const std::__cxx11::string& host, int16_t port) : abstract_actor(host, port) {};
+    ~gen_num_actor() {}
+  };
+ 
 }
 
+#endif // ACTMF_GEN_NUM_ACTOR_H

@@ -21,6 +21,8 @@
 
 using namespace actmf;
 
+using direct_atom = caf::atom_constant<caf::atom("direct")>;
+
 abstract_actor::abstract_actor(const std::string& host, int16_t port)
 {
   this->host = host;
@@ -31,8 +33,20 @@ abstract_actor::abstract_actor(const std::string& host, int16_t port)
 caf::behavior abstract_actor::make_behavior()
 {
   this->become(awaiting_task());
+  this->become(caf::keep_behavior, awaiting_direction());
   return {};
 }
+
+caf::behavior abstract_actor::awaiting_direction()
+{
+    return {
+      [=](direct_atom direct, const std::string& host, int16_t port) {
+       
+	this->unbecome();
+      }
+    };
+}
+
 
 abstract_actor::~abstract_actor()
 {
