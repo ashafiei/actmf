@@ -47,6 +47,15 @@ caf::behavior abstract_actor::awaiting_direction()
     };
 }
 
+void abstract_actor::append_actor(caf::actor act)
+{
+  this->next_actors.push_back(act);
+}
+
+void abstract_actor::clear_actors()
+{
+  this->next_actors.clear();
+}
 
 abstract_actor::~abstract_actor()
 {

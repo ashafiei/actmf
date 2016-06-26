@@ -32,10 +32,12 @@ namespace actmf {
   private:
     std::string host;
     uint16_t port;
-  
+    std::vector<caf::actor> next_actors;
   public:
     abstract_actor(const std::string& host, int16_t port);
     caf::behavior make_behavior() override;
+    void append_actor(caf::actor act);
+    void clear_actors();
     ~abstract_actor();
     
   };
