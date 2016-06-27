@@ -21,13 +21,17 @@
 
 using namespace actmf;
 
-using generate_atom = caf::atom_constant<caf::atom("generate")>;
-
 caf::behavior gen_num_actor::awaiting_task()
 {
   return {
     [=](generate_atom generate) {
-       
+       int a = rand() % 10;
+       int b = rand() % 10;
+       for (remote_actor ract : next_actors)
+	 this->send(ract.act, add_atom::value, a, b);
+    },
+    caf::after(std::chrono::seconds(3)) >> [=] {
+      this->send(this, generate_atom::value);
     }
   };
 }

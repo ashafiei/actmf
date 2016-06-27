@@ -21,13 +21,11 @@
 
 using namespace actmf;
 
-using disp_num_atom = caf::atom_constant<caf::atom("dis_num")>;
-
 caf::behavior disp_num_actor::awaiting_task()
 {
   return {
-    [=](disp_num_atom disp_num) {
-       
+    [=](disp_num_atom disp_num, int d) {
+       caf::aout(this) << "n = " << d << std::endl;
     }
   };
 }

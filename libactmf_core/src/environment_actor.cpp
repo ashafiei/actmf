@@ -21,9 +21,6 @@
 
 using namespace actmf;
 
-using register_atom = caf::atom_constant<caf::atom("register")>;
-using create_app_atom = caf::atom_constant<caf::atom("create_app")>;
-
 caf::behavior environment_actor::awaiting_task()
 {
     return {

@@ -21,8 +21,6 @@
 
 using namespace actmf;
 
-using direct_atom = caf::atom_constant<caf::atom("direct")>;
-
 abstract_actor::abstract_actor(const std::string& host, int16_t port)
 {
   this->host = host;
@@ -53,6 +51,7 @@ void abstract_actor::append_remote_actor(int id, const std::string& addr, int16_
   remote_actor r_act = {.id = id, .act = act, .addr = addr, .port = port};
   this->next_actors.push_back(r_act);
 }
+
 
 void abstract_actor::clear_actors()
 {

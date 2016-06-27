@@ -21,14 +21,13 @@
 
 using namespace actmf;
 
-using add_atom = caf::atom_constant<caf::atom("add")>;
-
 caf::behavior addition_actor::awaiting_task()
 {
     return {
       [=](add_atom add, int x, int y) {
-	
-       
+	int res = x + y;
+	for(remote_actor ract : next_actors)
+	  this->send(ract.act, disp_num_atom::value, res);
       }
     };
 }

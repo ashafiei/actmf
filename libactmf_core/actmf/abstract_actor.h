@@ -24,7 +24,16 @@
 #include "caf/io/all.hpp"
 
 namespace actmf {
+
+  using direct_atom = caf::atom_constant<caf::atom("direct")>;
   
+  using generate_atom = caf::atom_constant<caf::atom("generate")>;  
+  using add_atom = caf::atom_constant<caf::atom("add")>;
+  using disp_num_atom = caf::atom_constant<caf::atom("dis_num")>;
+  
+  using register_atom = caf::atom_constant<caf::atom("register")>;
+  using create_app_atom = caf::atom_constant<caf::atom("create_app")>;
+
   struct remote_actor {
     int id;
     caf::actor act;
@@ -37,14 +46,13 @@ namespace actmf {
   protected:
     virtual caf::behavior awaiting_task() = 0;
     caf::behavior awaiting_direction();
-  private:
     std::string host;
     uint16_t port;
     std::vector<remote_actor> next_actors;
   public:
     abstract_actor(const std::string& host, int16_t port);
     caf::behavior make_behavior() override;
-    void append_remote_actor(int id, const std::string& addr, int16_t port);
+    void append_remote_actor(int id, const std::string& addr, int16_t port);   
     void clear_actors();
     ~abstract_actor();
     
