@@ -1,10 +1,10 @@
-1) Actor Multimedia Framework (actmf)
+Actor Multimedia Framework (actmf)
 ===============================
 
 Actor Multimedia Framework (actmf) is an actor-based multimedia applications. An application consists of a number of components which together form a graph. Each component run as an actor. There is an actor called environment which is responsible of creating components of an application as actors.
 
 
-2) Folder structure
+Folder structure
 ===================
 
 Here is how the project is organized.
@@ -17,7 +17,7 @@ Here is how the project is organized.
 	README.md
 	actmf.kdev4
 
-3) Installation
+Installation
 ===============
 ```bash
   #!/bin/bash
@@ -32,13 +32,13 @@ Before compilation make sure that actor_framework library is installed:
   https://github.com/actor-framework/actor-framework
 ```
 
-4) Development envirement
+Development envirement
 ======================
 Actor Multimedia Framework is configured to be developed under KDevelop IDE.
 	
 	kdevelop -p actmf.kdev4
 
-5) User manual
+Application development manual
 ===========
 
 To create an application we need to create an application as well as the filters, connect filters to each other and run the pipeline. TMF provides APIs to do it.
@@ -64,7 +64,7 @@ Here is a producer/consumer example with one producer and three consumer:
   caf::shutdown();
 ```	
 
-6) Plugin developer manual
+Actor development manual
 =======================
 
 Plug-in developers must implement new actors (components of application) in libactmf_core folder. An actor inherits from the actmf::abstract_actor class. Each actor must define ```addition_actor::awaiting_task``` as the initial behaviour of the actor.
