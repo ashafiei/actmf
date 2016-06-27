@@ -22,6 +22,8 @@
 
 int main(int argc, char ** argv) {
 
+  caf::actor env = caf::io::remote_actor("localhost", 5000);
+  
   actmf::graph g;
   actmf::node gen_num(std::string("gen_num"), actmf::gen_num::value);
   actmf::node addition(std::string("addition"), actmf::addition::value);
@@ -33,6 +35,8 @@ int main(int argc, char ** argv) {
   
   g.add_link("gen_num", "addition");
   g.add_link("addition", "disp_num");
+  
+  caf::anon_send(env, actmf::create_app_atom::value, g);
   
   return 0;
 }
