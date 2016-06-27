@@ -1,7 +1,7 @@
 Actor Multimedia Framework (actmf)
 ===============================
 
-Actor Multimedia Framework (actmf) is an actor-based multimedia framework to build multimedia applications. An application consists of a number of components which together form a graph structure. Each component run as on an actor. There is an actor called environment which is responsible of creating components of an application as actors.
+Actor Multimedia Framework (actmf) is an actor-based multimedia framework to build multimedia applications. An application consists of a number of components which together form a graph structure. Each component run as on an actor. There is an actor called environment which is responsible for creating components of an application as actors.
 
 
 Folder structure
@@ -79,7 +79,7 @@ namespace actmf {
   protected:
     virtual caf::behavior awaiting_task();
   public:
-    addition_actor(const std::__cxx11::string& host, int16_t port) : abstract_actor(host, port) {};
+    addition_actor(const std::string& host, int16_t port) : abstract_actor(host, port) {};
     ~addition_actor() {}
   };
  
