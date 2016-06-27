@@ -1,6 +1,6 @@
 /*
- * <one line to give the library's name and an idea of what it does.>
- * Copyright (C) 2016  <copyright holder> <email>
+ * Actor Multimedia Framework (actmf)
+ * Copyright (C) 2016  Arash Shafiei
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
