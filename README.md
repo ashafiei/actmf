@@ -10,7 +10,7 @@ Folder structure
 Here is how the project is organized.
 
 	build
-	libactmf_core (core package)
+	libactmf_core
 	examples
 	CMakeLists.txt
 	LICENCE
