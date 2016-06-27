@@ -21,7 +21,7 @@
 #define ACTMF_ENVIRONMENT_H
 
 #include "actmf/abstract_actor.h"
-
+#include "actmf/graph.h"
 
 namespace actmf {
   

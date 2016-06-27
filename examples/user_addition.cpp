@@ -22,5 +22,17 @@
 
 int main(int argc, char ** argv) {
 
+  actmf::graph g;
+  actmf::node gen_num(std::string("gen_num"), actmf::gen_num::value);
+  actmf::node addition(std::string("addition"), actmf::addition::value);
+  actmf::node disp_num(std::string("disp_num"), actmf::disp_num::value);
+  
+  g.add_node(gen_num);
+  g.add_node(addition);
+  g.add_node(disp_num);
+  
+  g.add_link("gen_num", "addition");
+  g.add_link("addition", "disp_num");
+  
   return 0;
 }

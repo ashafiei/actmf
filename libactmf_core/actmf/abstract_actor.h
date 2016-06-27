@@ -25,6 +25,10 @@
 
 namespace actmf {
 
+  using gen_num = caf::atom_constant<caf::atom("numgen")>;
+  using addition = caf::atom_constant<caf::atom("addition")>; 
+  using disp_num = caf::atom_constant<caf::atom("dispnum")>;
+    
   using direct_atom = caf::atom_constant<caf::atom("direct")>;
   
   using generate_atom = caf::atom_constant<caf::atom("generate")>;  

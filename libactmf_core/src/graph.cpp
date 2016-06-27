@@ -17,18 +17,30 @@
  * 
  */
 
-#include "actmf/environment_actor.h"
+#include "actmf/graph.h"
 
 using namespace actmf;
 
-caf::behavior environment_actor::awaiting_task()
+graph::graph()
 {
-    return {
-      [=](register_atom reg, caf::atom_value actname, std::string& host, int16_t port) {
-       
-      },
-      [=](create_app_atom create, graph application) {
-       
-      }
-    };
+
+}
+
+void graph::add_node(node n)
+{
+  graph_data[n.name] = n;
+}
+
+
+void graph::add_link(std::__cxx11::string nbefore, std::__cxx11::string nafter)
+{
+  node nb = graph_data[nbefore];
+  node na = graph_data[nafter];
+  nb.next_nodes.push_back(na);
+}
+
+
+graph::~graph()
+{
+
 }

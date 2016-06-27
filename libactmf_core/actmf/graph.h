@@ -1,6 +1,6 @@
 /*
- * Actor Multimedia Framework (actmf)
- * Copyright (C) 2016  Arash Shafiei
+ * <one line to give the library's name and an idea of what it does.>
+ * Copyright (C) 2016  <copyright holder> <email>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,35 @@
  * 
  */
 
-#include "actmf/environment_actor.h"
+#ifndef GRAPH_H
+#define GRAPH_H
 
-using namespace actmf;
+#include "caf/all.hpp"
 
-caf::behavior environment_actor::awaiting_task()
-{
-    return {
-      [=](register_atom reg, caf::atom_value actname, std::string& host, int16_t port) {
-       
-      },
-      [=](create_app_atom create, graph application) {
-       
-      }
-    };
+namespace actmf {
+  
+  class node {
+  public:
+    std::string name;
+    caf::atom_value type;
+    std::vector<node> next_nodes;
+    node() {}
+    node(std::string name, caf::atom_value type) {
+      this->name = name;
+      this->type = type;
+    }
+  };
+  
+  class graph
+  {
+  private:
+    std::map<std::string,node> graph_data;
+  public:
+    graph();
+    void add_node(node n);
+    void add_link(std::string nbefore, std::string nafter);
+    ~graph();
+  };
 }
+
+#endif // GRAPH_H
