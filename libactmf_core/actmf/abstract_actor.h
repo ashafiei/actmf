@@ -24,6 +24,14 @@
 #include "caf/io/all.hpp"
 
 namespace actmf {
+  
+  struct remote_actor {
+    int id;
+    caf::actor act;
+    std::string addr;
+    int16_t port;
+  };
+  
   class abstract_actor : public caf::event_based_actor
   {
   protected:
@@ -32,11 +40,11 @@ namespace actmf {
   private:
     std::string host;
     uint16_t port;
-    std::vector<caf::actor> next_actors;
+    std::vector<remote_actor> next_actors;
   public:
     abstract_actor(const std::string& host, int16_t port);
     caf::behavior make_behavior() override;
-    void append_actor(caf::actor act);
+    void append_remote_actor(int id, const std::string& addr, int16_t port);
     void clear_actors();
     ~abstract_actor();
     

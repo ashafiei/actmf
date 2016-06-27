@@ -47,9 +47,11 @@ caf::behavior abstract_actor::awaiting_direction()
     };
 }
 
-void abstract_actor::append_actor(caf::actor act)
+void abstract_actor::append_remote_actor(int id, const std::string& addr, int16_t port)
 {
-  this->next_actors.push_back(act);
+  caf::actor act = caf::io::remote_actor(addr.c_str(), port);
+  remote_actor r_act = {.id = id, .act = act, .addr = addr, .port = port};
+  this->next_actors.push_back(r_act);
 }
 
 void abstract_actor::clear_actors()
@@ -59,7 +61,7 @@ void abstract_actor::clear_actors()
 
 abstract_actor::~abstract_actor()
 {
-  
+  caf::io::unpublish<caf::actor>(this, port);
 }
 
 
