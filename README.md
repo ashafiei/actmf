@@ -23,7 +23,6 @@ Installation
   #!/bin/bash
   cd build
   ../cmake
-  ./configure
   make
 ```
 Before compilation make sure that actor_framework library is installed:
