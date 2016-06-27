@@ -1,7 +1,7 @@
 Actor Multimedia Framework (actmf)
 ===============================
 
-Actor Multimedia Framework (actmf) is an actor-based multimedia applications. An application consists of a number of components which together form a graph. Each component run as an actor. There is an actor called environment which is responsible of creating components of an application as actors.
+Actor Multimedia Framework (actmf) is an actor-based multimedia framework to build multimedia applications. An application consists of a number of components which together form a graph structure. Each component run as on an actor. There is an actor called environment which is responsible of creating components of an application as actors.
 
 
 Folder structure
@@ -28,9 +28,7 @@ Installation
 ```
 Before compilation make sure that actor_framework library is installed:
 
-```
-  https://github.com/actor-framework/actor-framework
-```
+	https://github.com/actor-framework/actor-framework
 
 Development envirement
 ======================
@@ -41,9 +39,10 @@ Actor Multimedia Framework is configured to be developed under KDevelop IDE.
 Application development manual
 ===========
 
-To create an application we need to create an application as well as the filters, connect filters to each other and run the pipeline. TMF provides APIs to do it.
+To create an application we need to create components, connect them together and sent them to the environment actor.
 
-Here is a producer/consumer example with one producer and three consumer:
+Here is an example with three components, a number generator, an addition filter, and a number display component:
+
 ```c++
   caf::actor env = caf::io::remote_actor("localhost", 5000);
   
@@ -67,9 +66,10 @@ Here is a producer/consumer example with one producer and three consumer:
 Actor development manual
 =======================
 
-Plug-in developers must implement new actors (components of application) in libactmf_core folder. An actor inherits from the actmf::abstract_actor class. Each actor must define ```addition_actor::awaiting_task``` as the initial behaviour of the actor.
+Actor developers must implement new actors (components of application) in libactmf_core folder. An actor inherits from the actmf::abstract_actor class. Each actor must define ```addition_actor::awaiting_task``` as the initial behaviour of the actor.
 
-Here is an example of a filter implementation:
+Here is an example:
+
 ```c++
 
 namespace actmf {
