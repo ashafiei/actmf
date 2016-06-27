@@ -21,7 +21,7 @@
 #define ACTMF_ALL_H
 
 #include "caf/all.hpp"
-#include "actmf/graph.h"
+#include "actmf/appilcation.h"
 #include "actmf/environment_actor.h"
 #include "actmf/abstract_actor.h"
 #include "actmf/addition_actor.h"

@@ -17,30 +17,35 @@
  * 
  */
 
-#include "actmf/graph.h"
+#ifndef APPLICATION_H
+#define APPLICATION_H
 
-using namespace actmf;
+#include "caf/all.hpp"
 
-graph::graph()
-{
-
+namespace actmf {
+  
+  class component {
+  public:
+    std::string name;
+    caf::atom_value type;
+    std::vector<component> next_components;
+    component() {}
+    component(std::string name, caf::atom_value type) {
+      this->name = name;
+      this->type = type;
+    }
+  };
+  
+  class application 
+  {
+  private:
+    std::map<std::string,component> application_data;
+  public:
+    application();
+    void add_component(component c);
+    void add_link(std::string cbefore, std::string cafter);
+    ~application();
+  };
 }
 
-void graph::add_node(node n)
-{
-  graph_data[n.name] = n;
-}
-
-
-void graph::add_link(std::__cxx11::string nbefore, std::__cxx11::string nafter)
-{
-  node nb = graph_data[nbefore];
-  node na = graph_data[nafter];
-  nb.next_nodes.push_back(na);
-}
-
-
-graph::~graph()
-{
-
-}
+#endif // APPLICATION_H

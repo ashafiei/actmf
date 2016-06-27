@@ -27,7 +27,7 @@ caf::behavior environment_actor::awaiting_task()
       [=](register_atom reg, caf::atom_value actname, std::string& host, int16_t port) {
        
       },
-      [=](create_app_atom create, graph application) {
+      [=](create_app_atom create, application app) {
        
       }
     };

@@ -24,19 +24,21 @@ int main(int argc, char ** argv) {
 
   caf::actor env = caf::io::remote_actor("localhost", 5000);
   
-  actmf::graph g;
-  actmf::node gen_num(std::string("gen_num"), actmf::gen_num::value);
-  actmf::node addition(std::string("addition"), actmf::addition::value);
-  actmf::node disp_num(std::string("disp_num"), actmf::disp_num::value);
+  actmf::application app;
+  actmf::component gen_num(std::string("gen_num"), actmf::gen_num::value);
+  actmf::component addition(std::string("addition"), actmf::addition::value);
+  actmf::component disp_num(std::string("disp_num"), actmf::disp_num::value);
   
-  g.add_node(gen_num);
-  g.add_node(addition);
-  g.add_node(disp_num);
+  app.add_component(gen_num);
+  app.add_component(addition);
+  app.add_component(disp_num);
   
-  g.add_link("gen_num", "addition");
-  g.add_link("addition", "disp_num");
+  app.add_link("gen_num", "addition");
+  app.add_link("addition", "disp_num");
   
-  caf::anon_send(env, actmf::create_app_atom::value, g);
+  caf::anon_send(env, actmf::create_app_atom::value, app);
+  caf::await_all_actors_done();
+  caf::shutdown();
   
   return 0;
 }
