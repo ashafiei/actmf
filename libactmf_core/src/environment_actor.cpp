@@ -17,6 +17,7 @@
  * 
  */
 
+#include <dlfcn.h>
 #include "actmf/environment_actor.h"
 
 using namespace actmf;
@@ -30,6 +31,13 @@ caf::behavior environment_actor::awaiting_task()
       },
       [=](create_app_atom create, std::string app) {
 	caf::aout(this) << app << std::endl;
+	void *hndl = dlopen("libnum_gen_disp.so", RTLD_NOW);
+	if(hndl == NULL){
+	  caf::aout(this) << dlerror() << std::endl;
+	  exit(-1);
+	}
+	void *gendisp_hdl = dlsym(hndl, "num_gen_disp");
+	//abstract_actor *gendisp = static_cast<abstract_actor *()>(gendisp_hdl)();
 	//this->append_app(app);
 	//std::vector<component *> components = app.get_components();
 	//for (auto comp : components) {

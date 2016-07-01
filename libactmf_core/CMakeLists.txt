@@ -9,6 +9,6 @@ file(GLOB_RECURSE LIB_ACTMF_HDRS "actmf/*.cpp")
 file(GLOB_RECURSE LIB_ACTMF_SRC "src/*.cpp")
 
 add_library(${PROJECT_NAME} SHARED ${LIB_ACTMF_HDRS} ${LIB_ACTMF_SRC})
-target_link_libraries(${PROJECT_NAME} ${CAF_CORE_LIBRARY} ${CAF_IO_LIBRARY})
+target_link_libraries(${PROJECT_NAME} ${CAF_CORE_LIBRARY} ${CAF_IO_LIBRARY} dl)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
