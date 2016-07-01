@@ -17,29 +17,29 @@
  * 
  */
 
-#ifndef ACTMF_NUM_DISP_H
-#define ACTMF_NUM_DISP_H
+#include <iostream>
+#include <fstream>
 
-#include "actmf/abstract_actor.h"
+#include "caf/all.hpp"
+#include "caf/io/all.hpp"
+#include "abstract_actor.h"
 
-namespace actmf {
+int main(int argc, char ** argv) {
+
+  if (argc < 2) {
+    std::cout << "Usage:" << argv[0] << " <application>" << std::endl;
+    return 0;
+  }
   
-  class num_disp : public actmf::abstract_actor
-  {
-  private:
-  protected:
-    virtual caf::behavior awaiting_task() {
-      return {
-	[=](int app_id, int d) {
-	  caf::aout(this) << "n = " << d << std::endl;
-	}
-      };
-    }
-  public:
-    num_disp(const std::string& host, int16_t port) : abstract_actor(host, port) {};
-    ~num_disp() {}
-  };
- 
-}
+  std::ifstream f(argv[1]);
+  std::string app((std::istreambuf_iterator<char>(f)),
+                 std::istreambuf_iterator<char>());
+  
+  caf::actor env = caf::io::remote_actor("127.0.0.1", 5000);
 
-#endif // ACTMF_NUM_DISP_H
+  caf::anon_send(env, actmf::create_app_atom::value, app);
+  caf::await_all_actors_done();
+  caf::shutdown();
+  
+  return 0;
+}

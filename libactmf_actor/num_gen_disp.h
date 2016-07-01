@@ -20,11 +20,11 @@
 #ifndef ACTMF_NUM_GEN_DISP_H
 #define ACTMF_NUM_GEN_DISP_H
 
-#include "actmf/abstract_actor.h"
+#include "abstract_actor.h"
 
 namespace actmf {
   
-  class num_gen_disp : public actmf::abstract_actor
+  class num_gen_disp : public abstract_actor
   {
   private:
   protected:
@@ -40,10 +40,29 @@ namespace actmf {
       };
     }
   public:
+    num_gen_disp() {};
     num_gen_disp(const std::string& host, int16_t port) : abstract_actor(host, port) {};
+    virtual void spawn(const std::string& host, int16_t port) {
+      act_handle = caf::spawn<num_gen_disp>(host, port);
+    }
+    virtual void test() {
+      std::cout << "Hi from num_gen_disp" << std::endl;
+    }
     ~num_gen_disp() {}
   };
  
+  // the class of the plugin factory
+  class num_gen_disp_factory : public actor_factory
+  {
+  public:
+    abstract_actor * create_actor() {
+    std::cout << "creating num_gen_disp" << std::endl;
+    return new num_gen_disp;
+    }
+  };
 }
+
+// a statically declared instance of our derived factory class
+actmf::num_gen_disp_factory Factory;
 
 #endif // ACTMF_NUM_GEN_DISP_H

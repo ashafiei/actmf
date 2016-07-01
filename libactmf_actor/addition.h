@@ -17,29 +17,34 @@
  * 
  */
 
-#include <iostream>
-#include <fstream>
+#ifndef ACTMF_ADDITION_H
+#define ACTMF_ADDITION_H
 
-#include "caf/all.hpp"
-#include "caf/io/all.hpp"
-#include "actmf/all.h"
+#include "abstract_actor.h"
 
-int main(int argc, char ** argv) {
-
-  if (argc < 2) {
-    std::cout << "Usage:" << argv[0] << " <application>" << std::endl;
-    return 0;
-  }
+namespace actmf {
   
-  std::ifstream f(argv[1]);
-  std::string app((std::istreambuf_iterator<char>(f)),
-                 std::istreambuf_iterator<char>());
-  
-  caf::actor env = caf::io::remote_actor("127.0.0.1", 5000);
-
-  caf::anon_send(env, actmf::create_app_atom::value, app);
-  caf::await_all_actors_done();
-  caf::shutdown();
-  
-  return 0;
+  class addition : public abstract_actor 
+  {
+  private:
+  protected:
+    virtual caf::behavior awaiting_task() {
+      return {
+      [=](int app_id, int x, int y) {
+	int res = x + y;
+	for(remote_actor ract : next_actors[app_id])
+	  this->send(ract.act, app_id, res);
+      }
+      };
+    }
+  public:
+    addition(const std::string& host, int16_t port) : abstract_actor(host, port) {};
+    virtual void spawn(const std::string& host, int16_t port) {
+      act_handle = caf::spawn<addition>(host, port);
+    }
+    ~addition() {}
+  };
+ 
 }
+
+#endif // ACTMF_ADDITION_H

@@ -18,9 +18,24 @@
  */
 
 #include <dlfcn.h>
-#include "actmf/environment_actor.h"
+#include "environment_actor.h"
 
 using namespace actmf;
+
+environment_actor::environment_actor()
+{
+
+}
+
+void environment_actor::spawn()
+{
+  act_handle = caf::spawn<environment_actor>();
+}
+
+environment_actor::~environment_actor()
+{
+
+}
 
 caf::behavior environment_actor::awaiting_task()
 {
@@ -31,12 +46,26 @@ caf::behavior environment_actor::awaiting_task()
       },
       [=](create_app_atom create, std::string app) {
 	caf::aout(this) << app << std::endl;
-	void *hndl = dlopen("libnum_gen_disp.so", RTLD_NOW);
-	if(hndl == NULL){
+	
+	void *handl = dlopen("libnum_gen_disp.so", RTLD_NOW);
+	if(handl == nullptr){
 	  caf::aout(this) << dlerror() << std::endl;
 	  exit(-1);
 	}
-	void *gendisp_hdl = dlsym(hndl, "num_gen_disp");
+	actor_factory *act_factory = (actor_factory*)dlsym(handl, "Factory");
+	if (act_factory == nullptr) {
+	  std::cout << "act_factory is not created" << std::endl;
+	  exit(-1);
+	}
+	abstract_actor * act = act_factory->create_actor();
+	if (act == nullptr) {
+	  std::cout << "abstract_actor is not created" << std::endl;
+	  exit(-1);
+	}
+	act->spawn();
+	act->publish("127.0.0.1", 4000);
+	
+	//act->spawn("127.0.0.1", 4000);
 	//abstract_actor *gendisp = static_cast<abstract_actor *()>(gendisp_hdl)();
 	//this->append_app(app);
 	//std::vector<component *> components = app.get_components();

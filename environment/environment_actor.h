@@ -17,10 +17,24 @@
  * 
  */
 
-#ifndef ACTMF_ALL_H
-#define ACTMF_ALL_H
+#ifndef ACTMF_ENVIRONMENT_ACTOR_H
+#define ACTMF_ENVIRONMENT_ACTOR_H
 
-#include "actmf/abstract_actor.h"
-#include "actmf/environment_actor.h"
+#include "abstract_actor.h"
 
-#endif // ACTMF_ALL_H
+namespace actmf {
+  
+  class environment_actor : public abstract_actor
+  {
+  private:
+    int cur_app_id;
+  protected:
+    caf::behavior awaiting_task() override;
+  public:
+    environment_actor();
+    void spawn() override;
+    ~environment_actor();
+  };
+}
+
+#endif // ACTMF_ENVIRONMENT_ACTOR_H

@@ -20,13 +20,18 @@
 #include <iostream>
 
 #include "caf/all.hpp"
-#include "actmf/all.h"
+#include "environment_actor.h"
 
 int main(int argc, char ** argv) {
 
   std::string host = "127.0.0.1";
   int16_t port = 5000;
-  caf::actor env = caf::spawn<actmf::environment_actor>(host, port);
+  //actmf::environment_actor env;
+  //env.spawn();
+  //env.publish(host, port);
+  caf::actor ac = caf::spawn<actmf::environment_actor>();
+  caf::io::publish(ac, port, host.c_str());
+  
   caf::await_all_actors_done();
   caf::shutdown();
   

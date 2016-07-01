@@ -17,16 +17,21 @@
  * 
  */
 
-#include "actmf/abstract_actor.h"
+#include "abstract_actor.h"
 
 using namespace actmf;
 
-abstract_actor::abstract_actor(const std::string& host, int16_t port)
+abstract_actor::abstract_actor()
+{
+
+}
+
+void abstract_actor::publish(const std::string& host, int16_t port)
 {
   this->host = host;
   this->port = port;
   caf::io::publish(this, port, host.c_str());
-  caf::aout(this) << "actor is listening on " << host << " on port " << port << std::endl;
+  caf::aout(this) << "actor is listening on " << host << " on port " << port << std::endl; 
 }
 
 caf::behavior abstract_actor::make_behavior()
@@ -58,9 +63,13 @@ void abstract_actor::clear_actors()
   this->next_actors.clear();
 }
 
-abstract_actor::~abstract_actor()
+void abstract_actor::unpublish()
 {
   caf::io::unpublish<caf::actor>(this, port);
 }
 
+abstract_actor::~abstract_actor()
+{
+
+}
 

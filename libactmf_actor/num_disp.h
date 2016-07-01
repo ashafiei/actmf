@@ -17,37 +17,32 @@
  * 
  */
 
-#ifndef ACTMF_NUM_GEN_H
-#define ACTMF_NUM_GEN_H
+#ifndef ACTMF_NUM_DISP_H
+#define ACTMF_NUM_DISP_H
 
-#include "actmf/abstract_actor.h"
+#include "abstract_actor.h"
 
 namespace actmf {
   
-  class num_gen : public actmf::abstract_actor
+  class num_disp : public abstract_actor
   {
   private:
   protected:
     virtual caf::behavior awaiting_task() {
       return {
-	[=](int app_id) {
-	  int a = rand() % 10;
-	  int b = rand() % 10;
-	  for (remote_actor ract : next_actors[app_id])
-	   this->send(ract.act, app_id, a, b);
-	  
-	},
-	caf::after(std::chrono::seconds(3)) >> [=] {
-	  for (auto r : next_actors) 
-	    this->send(this, r.first);
-	}	
+	[=](int app_id, int d) {
+	  caf::aout(this) << "n = " << d << std::endl;
+	}
       };
     }
   public:
-    num_gen(const std::string& host, int16_t port) : abstract_actor(host, port) {};
-    ~num_gen() {}
+    num_disp(const std::string& host, int16_t port) : abstract_actor(host, port) {};
+    virtual void spawn(const std::string& host, int16_t port) {
+      act_handle = caf::spawn<num_disp>(host, port);
+    }
+    ~num_disp() {}
   };
  
 }
 
-#endif // ACTMF_NUM_GEN_H
+#endif // ACTMF_NUM_DISP_H

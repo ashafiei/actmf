@@ -44,6 +44,7 @@ namespace actmf {
   class abstract_actor : public caf::event_based_actor
   {
   protected:
+    caf::actor act_handle;
     std::string type;
     virtual caf::behavior awaiting_task() = 0;
     caf::behavior awaiting_direction();
@@ -51,14 +52,27 @@ namespace actmf {
     uint16_t port;
     std::map<int, std::vector<remote_actor>> next_actors;
   public:
-    abstract_actor(const std::string& host, int16_t port);
+    abstract_actor();
+    void publish(const std::string& host, int16_t port);
+    void unpublish();
+    virtual void spawn() = 0;
     caf::behavior make_behavior() override;
-    void append_remote_actor(int app_id, int id, const std::string& addr, int16_t port);   
+    void append_remote_actor(int app_id, int id, const std::string& addr, int16_t port);  
     void clear_actors();
-    ~abstract_actor();
+    virtual ~abstract_actor();
     
   };
   
+
+  class actor_factory
+  {
+  public:
+    // default constructor
+    virtual abstract_actor * create_actor() { };
+    // default destructor
+  };
+
 }
+
 
 #endif // ACTOR_H
