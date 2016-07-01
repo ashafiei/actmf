@@ -17,24 +17,29 @@
  * 
  */
 
-#include "actmf/environment_actor.h"
+#include <iostream>
+#include <fstream>
 
-using namespace actmf;
+#include "caf/all.hpp"
+#include "caf/io/all.hpp"
+#include "actmf/all.h"
 
-caf::behavior environment_actor::awaiting_task()
-{
-  std::cout << "In awaiting_task" << std::endl;
-  return {
-      [=](register_atom reg, caf::atom_value actname, std::string& host, int16_t port) {
+int main(int argc, char ** argv) {
 
-      },
-      [=](create_app_atom create, std::string app) {
-	caf::aout(this) << app << std::endl;
-	//this->append_app(app);
-	//std::vector<component *> components = app.get_components();
-	//for (auto comp : components) {
-	//  comp->spawn("localhost", 4000);
-	//}
-      }
-    };
+  if (argc < 2) {
+    std::cout << "Usage:" << argv[0] << " <application>" << std::endl;
+    return 0;
+  }
+  
+  std::ifstream f(argv[1]);
+  std::string app((std::istreambuf_iterator<char>(f)),
+                 std::istreambuf_iterator<char>());
+  
+  caf::actor env = caf::io::remote_actor("127.0.0.1", 5000);
+
+  caf::anon_send(env, actmf::create_app_atom::value, app);
+  caf::await_all_actors_done();
+  caf::shutdown();
+  
+  return 0;
 }

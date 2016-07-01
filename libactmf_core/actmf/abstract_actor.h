@@ -25,10 +25,6 @@
 
 namespace actmf {
 
-  using gen_num = caf::atom_constant<caf::atom("numgen")>;
-  using addition = caf::atom_constant<caf::atom("addition")>; 
-  using disp_num = caf::atom_constant<caf::atom("dispnum")>;
-    
   using direct_atom = caf::atom_constant<caf::atom("direct")>;
   
   using generate_atom = caf::atom_constant<caf::atom("generate")>;  
@@ -48,15 +44,16 @@ namespace actmf {
   class abstract_actor : public caf::event_based_actor
   {
   protected:
+    std::string type;
     virtual caf::behavior awaiting_task() = 0;
     caf::behavior awaiting_direction();
     std::string host;
     uint16_t port;
-    std::vector<remote_actor> next_actors;
+    std::map<int, std::vector<remote_actor>> next_actors;
   public:
     abstract_actor(const std::string& host, int16_t port);
     caf::behavior make_behavior() override;
-    void append_remote_actor(int id, const std::string& addr, int16_t port);   
+    void append_remote_actor(int app_id, int id, const std::string& addr, int16_t port);   
     void clear_actors();
     ~abstract_actor();
     

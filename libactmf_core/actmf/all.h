@@ -20,12 +20,7 @@
 #ifndef ACTMF_ALL_H
 #define ACTMF_ALL_H
 
-#include "caf/all.hpp"
-#include "actmf/appilcation.h"
-#include "actmf/environment_actor.h"
 #include "actmf/abstract_actor.h"
-#include "actmf/addition_actor.h"
-#include "actmf/gen_num_actor.h"
-#include "actmf/disp_num_actor.h"
+#include "actmf/environment_actor.h"
 
 #endif // ACTMF_ALL_H

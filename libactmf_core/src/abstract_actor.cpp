@@ -26,12 +26,12 @@ abstract_actor::abstract_actor(const std::string& host, int16_t port)
   this->host = host;
   this->port = port;
   caf::io::publish(this, port, host.c_str());
+  caf::aout(this) << "actor is listening on " << host << " on port " << port << std::endl;
 }
 
 caf::behavior abstract_actor::make_behavior()
 {
   this->become(awaiting_task());
-  this->become(caf::keep_behavior, awaiting_direction());
   return {};
 }
 
@@ -45,11 +45,11 @@ caf::behavior abstract_actor::awaiting_direction()
     };
 }
 
-void abstract_actor::append_remote_actor(int id, const std::string& addr, int16_t port)
+void abstract_actor::append_remote_actor(int app_id, int id, const std::string& addr, int16_t port)
 {
   caf::actor act = caf::io::remote_actor(addr.c_str(), port);
   remote_actor r_act = {.id = id, .act = act, .addr = addr, .port = port};
-  this->next_actors.push_back(r_act);
+  this->next_actors[app_id].push_back(r_act);
 }
 
 

@@ -17,24 +17,37 @@
  * 
  */
 
-#include "actmf/environment_actor.h"
+#ifndef ACTMF_NUM_GEN_H
+#define ACTMF_NUM_GEN_H
 
-using namespace actmf;
+#include "actmf/abstract_actor.h"
 
-caf::behavior environment_actor::awaiting_task()
-{
-  std::cout << "In awaiting_task" << std::endl;
-  return {
-      [=](register_atom reg, caf::atom_value actname, std::string& host, int16_t port) {
-
-      },
-      [=](create_app_atom create, std::string app) {
-	caf::aout(this) << app << std::endl;
-	//this->append_app(app);
-	//std::vector<component *> components = app.get_components();
-	//for (auto comp : components) {
-	//  comp->spawn("localhost", 4000);
-	//}
-      }
-    };
+namespace actmf {
+  
+  class num_gen : public actmf::abstract_actor
+  {
+  private:
+  protected:
+    virtual caf::behavior awaiting_task() {
+      return {
+	[=](int app_id) {
+	  int a = rand() % 10;
+	  int b = rand() % 10;
+	  for (remote_actor ract : next_actors[app_id])
+	   this->send(ract.act, app_id, a, b);
+	  
+	},
+	caf::after(std::chrono::seconds(3)) >> [=] {
+	  for (auto r : next_actors) 
+	    this->send(this, r.first);
+	}	
+      };
+    }
+  public:
+    num_gen(const std::string& host, int16_t port) : abstract_actor(host, port) {};
+    ~num_gen() {}
+  };
+ 
 }
+
+#endif // ACTMF_NUM_GEN_H

@@ -21,18 +21,21 @@
 #define ACTMF_ENVIRONMENT_H
 
 #include "actmf/abstract_actor.h"
-#include "actmf/appilcation.h"
+#include <vector>
+
 
 namespace actmf {
   
   class environment_actor : public actmf::abstract_actor
   {
   private:
-
+    int cur_app_id;
   protected:
     virtual caf::behavior awaiting_task();
   public:
-    environment_actor(const std::__cxx11::string& host, int16_t port) : abstract_actor(host, port) {};
+    environment_actor(const std::string& host, int16_t port) : abstract_actor(host, port) {
+      cur_app_id = 1;
+    };
     ~environment_actor() {}
   };
 }
