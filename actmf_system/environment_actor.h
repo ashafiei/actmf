@@ -17,29 +17,28 @@
  * 
  */
 
-#include <iostream>
-#include <fstream>
+#ifndef ACTMF_ENVIRONMENT_ACTOR_H
+#define ACTMF_ENVIRONMENT_ACTOR_H
 
+#include <iostream>
 #include "caf/all.hpp"
 #include "caf/io/all.hpp"
-#include "abstract_actor.h"
+#include "actmf_interface/abstract_service.h"
 
-int main(int argc, char ** argv) {
-
-  if (argc < 2) {
-    std::cout << "Usage:" << argv[0] << " <application>" << std::endl;
-    return 0;
-  }
+namespace actmf {
   
-  std::ifstream f(argv[1]);
-  std::string app((std::istreambuf_iterator<char>(f)),
-                 std::istreambuf_iterator<char>());
-  
-  caf::actor env = caf::io::remote_actor("127.0.0.1", 5000);
-
-  caf::anon_send(env, actmf::create_app_atom::value, app);
-  caf::await_all_actors_done();
-  caf::shutdown();
-  
-  return 0;
+  class environment_actor : public caf::event_based_actor
+  {
+  private:
+    int cur_app_id;
+    caf::actor_system_config cfg;
+    caf::actor_system system{cfg};
+    caf::behavior awaiting_task();
+  public:
+    environment_actor(caf::actor_config& cfg);
+    virtual caf::behavior make_behavior();
+    ~environment_actor();
+  };
 }
+
+#endif // ACTMF_ENVIRONMENT_ACTOR_H

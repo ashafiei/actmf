@@ -17,34 +17,33 @@
  * 
  */
 
-#ifndef ACTMF_ADDITION_H
-#define ACTMF_ADDITION_H
+#include "abstract_service.h"
 
-#include "abstract_actor.h"
+using namespace actmf;
 
-namespace actmf {
-  
-  class addition : public abstract_actor 
-  {
-  private:
-  protected:
-    virtual caf::behavior awaiting_task() {
-      return {
-      [=](int app_id, int x, int y) {
-	int res = x + y;
-	for(remote_actor ract : next_actors[app_id])
-	  this->send(ract.act, app_id, res);
-      }
-      };
-    }
-  public:
-    addition(const std::string& host, int16_t port) : abstract_actor(host, port) {};
-    virtual void spawn(const std::string& host, int16_t port) {
-      act_handle = caf::spawn<addition>(host, port);
-    }
-    ~addition() {}
-  };
- 
+abstract_service::abstract_service(caf::actor_config& cfg):
+caf::event_based_actor(cfg)
+{
+
 }
 
-#endif // ACTMF_ADDITION_H
+caf::behavior abstract_service::make_behavior()
+{
+  this->become(awaiting_task());
+  return {};
+}
+
+caf::behavior abstract_service::awaiting_direction()
+{
+    return {
+      [=](direct_atom direct, const std::string& host, int16_t port) {
+       
+	this->unbecome();
+      }
+    };
+}
+
+abstract_service::~abstract_service()
+{
+
+}

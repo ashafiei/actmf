@@ -17,24 +17,28 @@
  * 
  */
 
-#ifndef ACTMF_ENVIRONMENT_ACTOR_H
-#define ACTMF_ENVIRONMENT_ACTOR_H
+#ifndef ACTMF_NUM_DISP_H
+#define ACTMF_NUM_DISP_H
 
-#include "abstract_actor.h"
+#include "actmf_interface/abstract_service.h"
 
 namespace actmf {
   
-  class environment_actor : public abstract_actor
+  class num_disp : public abstract_service
   {
-  private:
-    int cur_app_id;
   protected:
-    caf::behavior awaiting_task() override;
+    virtual caf::behavior awaiting_task();
   public:
-    environment_actor();
-    void spawn() override;
-    ~environment_actor();
+    num_disp(caf::actor_config& cfg);
+    ~num_disp();
   };
+  
+  class num_disp_factory : abstract_service_factory
+  {
+  public:
+   virtual caf::actor spawn(caf::actor_system& system);
+  };
+ 
 }
 
-#endif // ACTMF_ENVIRONMENT_ACTOR_H
+#endif // ACTMF_NUM_DISP_H

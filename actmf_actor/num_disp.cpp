@@ -17,23 +17,32 @@
  * 
  */
 
-#include <iostream>
+#include "num_disp.h"
 
-#include "caf/all.hpp"
-#include "environment_actor.h"
+using namespace actmf;
 
-int main(int argc, char ** argv) {
+num_disp_factory Factory;
 
-  std::string host = "127.0.0.1";
-  int16_t port = 5000;
-  //actmf::environment_actor env;
-  //env.spawn();
-  //env.publish(host, port);
-  caf::actor ac = caf::spawn<actmf::environment_actor>();
-  caf::io::publish(ac, port, host.c_str());
-  
-  caf::await_all_actors_done();
-  caf::shutdown();
-  
-  return 0;
+num_disp::num_disp(caf::actor_config& cfg): abstract_service(cfg)
+{
+
+}
+
+caf::behavior num_disp::awaiting_task()
+{
+  return {
+    [=](int app_id, int d) {
+      caf::aout(this) << "n = " << d << std::endl; 
+    }
+  };
+}
+
+num_disp::~num_disp()
+{
+
+}
+
+caf::actor num_disp_factory::spawn(caf::actor_system& system)
+{
+  return system.spawn<num_disp>();
 }

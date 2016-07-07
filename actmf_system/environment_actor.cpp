@@ -22,17 +22,7 @@
 
 using namespace actmf;
 
-environment_actor::environment_actor()
-{
-
-}
-
-void environment_actor::spawn()
-{
-  act_handle = caf::spawn<environment_actor>();
-}
-
-environment_actor::~environment_actor()
+environment_actor::environment_actor(caf::actor_config& cfg): caf::event_based_actor(cfg)
 {
 
 }
@@ -52,18 +42,19 @@ caf::behavior environment_actor::awaiting_task()
 	  caf::aout(this) << dlerror() << std::endl;
 	  exit(-1);
 	}
-	actor_factory *act_factory = (actor_factory*)dlsym(handl, "Factory");
-	if (act_factory == nullptr) {
+	
+	abstract_service_factory *serv_factory = (abstract_service_factory*)dlsym(handl, "Factory");
+	if (serv_factory == nullptr) {
 	  std::cout << "act_factory is not created" << std::endl;
 	  exit(-1);
 	}
-	abstract_actor * act = act_factory->create_actor();
+	caf::actor act = serv_factory->spawn(system);
 	if (act == nullptr) {
 	  std::cout << "abstract_actor is not created" << std::endl;
 	  exit(-1);
 	}
-	act->spawn();
-	act->publish("127.0.0.1", 4000);
+
+	//system.middleman().publish(act, port);
 	
 	//act->spawn("127.0.0.1", 4000);
 	//abstract_actor *gendisp = static_cast<abstract_actor *()>(gendisp_hdl)();
@@ -72,6 +63,20 @@ caf::behavior environment_actor::awaiting_task()
 	//for (auto comp : components) {
 	//  comp->spawn("localhost", 4000);
 	//}
-      }
-    };
+	//system.middleman().publish(act, port);
+	//caf::aout(this) << "actor is listening on " << host << " on port " << port << std::endl; 
+	//system.middleman().unpublish(act, port);  
+    }
+  };
+}
+
+caf::behavior environment_actor::make_behavior()
+{
+  this->become(awaiting_task());
+  return {};
+}
+
+environment_actor::~environment_actor()
+{
+
 }

@@ -17,32 +17,37 @@
  * 
  */
 
-#ifndef ACTMF_NUM_DISP_H
-#define ACTMF_NUM_DISP_H
+#include "num_gen_disp.h"
 
-#include "abstract_actor.h"
+using namespace actmf;
 
-namespace actmf {
-  
-  class num_disp : public abstract_actor
-  {
-  private:
-  protected:
-    virtual caf::behavior awaiting_task() {
-      return {
-	[=](int app_id, int d) {
-	  caf::aout(this) << "n = " << d << std::endl;
-	}
-      };
-    }
-  public:
-    num_disp(const std::string& host, int16_t port) : abstract_actor(host, port) {};
-    virtual void spawn(const std::string& host, int16_t port) {
-      act_handle = caf::spawn<num_disp>(host, port);
-    }
-    ~num_disp() {}
-  };
- 
+num_gen_disp_factory Factory;
+
+num_gen_disp::num_gen_disp(caf::actor_config& cfg): abstract_service(cfg)
+{
+
 }
 
-#endif // ACTMF_NUM_DISP_H
+caf::behavior num_gen_disp::awaiting_task()
+{
+  return {
+    [=](bool) {
+      int a = rand() % 10;
+      caf::aout(this) << "random number= " << a << std::endl;
+    },
+    caf::after(std::chrono::seconds(3)) >> [=] {
+      this->send(this, true);
+    }
+  };
+}
+
+num_gen_disp::~num_gen_disp()
+{
+
+}
+
+caf::actor num_gen_disp_factory::spawn(caf::actor_system& system)
+{
+  return system.spawn<num_gen_disp>();
+}
+

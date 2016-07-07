@@ -17,8 +17,8 @@
  * 
  */
 
-#ifndef ACTOR_H
-#define ACTOR_H
+#ifndef ABSTRACT_SERVICE_H
+#define ABSTRACT_SERVICE_H
 
 #include "caf/all.hpp"
 #include "caf/io/all.hpp"
@@ -30,49 +30,37 @@ namespace actmf {
   using generate_atom = caf::atom_constant<caf::atom("generate")>;  
   using add_atom = caf::atom_constant<caf::atom("add")>;
   using disp_num_atom = caf::atom_constant<caf::atom("dis_num")>;
+  using gen_disp_atom = caf::atom_constant<caf::atom("gen_disp")>;
   
   using register_atom = caf::atom_constant<caf::atom("register")>;
   using create_app_atom = caf::atom_constant<caf::atom("create_app")>;
 
-  struct remote_actor {
+  struct service {
     int id;
     caf::actor act;
     std::string addr;
     int16_t port;
+    std::string type;
   };
   
-  class abstract_actor : public caf::event_based_actor
+  class abstract_service : public caf::event_based_actor
   {
   protected:
-    caf::actor act_handle;
-    std::string type;
     virtual caf::behavior awaiting_task() = 0;
     caf::behavior awaiting_direction();
-    std::string host;
-    uint16_t port;
-    std::map<int, std::vector<remote_actor>> next_actors;
+    std::map<int, std::vector<service>> next_service;
   public:
-    abstract_actor();
-    void publish(const std::string& host, int16_t port);
-    void unpublish();
-    virtual void spawn() = 0;
-    caf::behavior make_behavior() override;
-    void append_remote_actor(int app_id, int id, const std::string& addr, int16_t port);  
-    void clear_actors();
-    virtual ~abstract_actor();
+    abstract_service(caf::actor_config& cfg);
+    caf::behavior make_behavior() override; 
+    ~abstract_service();
     
   };
   
-
-  class actor_factory
-  {
+  class abstract_service_factory {
   public:
-    // default constructor
-    virtual abstract_actor * create_actor() { };
-    // default destructor
+    virtual caf::actor spawn(caf::actor_system& system) = 0;
   };
 
 }
 
-
-#endif // ACTOR_H
+#endif // ABSTRACT_SERVICE_H
