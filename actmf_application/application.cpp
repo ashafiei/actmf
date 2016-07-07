@@ -24,27 +24,37 @@
 #include "caf/io/all.hpp"
 #include "actmf_interface/abstract_service.h"
 
-int main(int argc, char ** argv) {
+class config : public caf::actor_system_config {
+public:
+  uint16_t port = 5000;
+  std::string host = "127.0.0.1";
+  std::string application = "";
 
-  if (argc < 2) {
-    std::cout << "Usage:" << argv[0] << " <application>" << std::endl;
-    return 0;
+  config() {
+    opt_group{custom_options_, "global"}
+    .add(port, "port,p", "set port")
+    .add(host, "host,h", "set host")
+    .add(application, "application,a", "application configuration file");
+  }
+};
+
+void caf_main(caf::actor_system& system, const config& cfg) {
+  
+  if (cfg.application == "") {
+    std::cout << "Please provide the application configuration file." << std::endl;
+    return;
   }
   
-  caf::actor_system_config cfg;
-  caf::actor_system system{cfg};
-  
-  std::ifstream f(argv[1]);
+  std::ifstream f(cfg.application);
   std::string app((std::istreambuf_iterator<char>(f)),
                  std::istreambuf_iterator<char>());
   
-  auto eenv = system.middleman().remote_actor("127.0.0.1", 5000);
+  auto eenv = system.middleman().remote_actor(cfg.host, cfg.port);
   if (!eenv)
     throw std::runtime_error(system.render(eenv.error()));
   caf::actor env = std::move(*eenv);
   caf::anon_send(env, actmf::create_app_atom::value, app);
   system.await_all_actors_done();
-  system.await_actors_before_shutdown();
-  
-  return 0;
 }
+
+CAF_MAIN(caf::io::middleman)

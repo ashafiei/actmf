@@ -23,12 +23,13 @@
 #include "caf/io/all.hpp"
 #include "environment_actor.h"
 
-int main(int argc, char ** argv) {
-
-  caf::actor_system_config cfg;
-  caf::actor_system system{cfg};
+void caf_main(caf::actor_system& system) {
   
-  system.spawn<actmf::environment_actor>();
+  caf::actor env = system.spawn<actmf::environment_actor>();
+  system.middleman().publish(env, 5000);
+
   system.await_all_actors_done();
-  //system.await_actors_before_shutdown();
 }
+
+CAF_MAIN(caf::io::middleman)
+

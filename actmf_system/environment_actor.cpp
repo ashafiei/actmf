@@ -37,7 +37,7 @@ caf::behavior environment_actor::awaiting_task()
       [=](create_app_atom create, std::string app) {
 	caf::aout(this) << app << std::endl;
 	
-	void *handl = dlopen("libnum_gen_disp.so", RTLD_NOW);
+	void *handl = dlopen("lib/libnum_gen_disp.so", RTLD_NOW);
 	if(handl == nullptr){
 	  caf::aout(this) << dlerror() << std::endl;
 	  exit(-1);
