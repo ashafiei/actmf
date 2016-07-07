@@ -1,7 +1,7 @@
 Actor Multimedia Framework (actmf)
 ===============================
 
-Actor Multimedia Framework (actmf) is an actor-based multimedia framework to build multimedia applications. An application consists of a number of components which together form a graph structure. Each component run as on an actor. There is an actor called environment which is responsible for creating components of an application as actors.
+Actor Multimedia Framework (actmf) is an actor-based multimedia framework to build multimedia applications. An application consists of a number of components which together form a graph structure. Each component runs as an actor. There is an actor called environment which is responsible for creating components of an application as actors dynamically.
 
 
 Folder structure
@@ -10,8 +10,9 @@ Folder structure
 Here is how the project is organized.
 
 	build
-	libactmf_core
-	examples
+	actmf_actor
+	actmf_application
+	actmf_system
 	CMakeLists.txt
 	LICENCE
 	README.md
@@ -38,34 +39,25 @@ Actor Multimedia Framework is configured to be developed under KDevelop IDE.
 Application development manual
 ===========
 
-To create an application we need to create components, connect them together and sent them to the environment actor.
+To create an application we need to create components, connect them together and sent them to the environment actor. The application graph is constructed in a configuration file.
 
 Here is an example with three components, a number generator, an addition filter, and a number display component:
 
-```c++
-  caf::actor env = caf::io::remote_actor("localhost", 5000);
-  
-  actmf::application app;
-  actmf::component gen_num(std::string("gen_num"), actmf::gen_num::value);
-  actmf::component addition(std::string("addition"), actmf::addition::value);
-  actmf::component disp_num(std::string("disp_num"), actmf::disp_num::value);
-  
-  app.add_component(gen_num);
-  app.add_component(addition);
-  app.add_component(disp_num);
-  
-  app.add_link("gen_num", "addition");
-  app.add_link("addition", "disp_num");
-  
-  caf::anon_send(env, actmf::create_app_atom::value, app);
-  caf::await_all_actors_done();
-  caf::shutdown();
-```	
+	application = 'addition'
+
+	g = 'num_gen'
+	a = 'addition'
+	d = 'num_disp'
+
+	connections = [(g, a), (a, d)]
+	
+The configuration file is passed to the application.
+
 
 Actor development manual
 =======================
 
-Actor developers must implement new actors (components of application) in libactmf_core folder. An actor inherits from the actmf::abstract_actor class. Each actor must define ```addition_actor::awaiting_task``` as the initial behaviour of the actor.
+Actor developers must implement new actors (components of application) in ```actmf_actor``` folder. An actor inherits from the actmf::abstract_service class. Each actor must define ```addition_actor::awaiting_task``` as the initial behaviour of the actor. A factory is needed for spawning the actor.
 
 Here is an example:
 
@@ -73,29 +65,49 @@ Here is an example:
 
 namespace actmf {
   
-  class addition_actor : public actmf::abstract_actor
+  class addition : public abstract_service
   {
-  private:
   protected:
     virtual caf::behavior awaiting_task();
   public:
-    addition_actor(const std::string& host, int16_t port) : abstract_actor(host, port) {};
-    ~addition_actor() {}
+    addition(caf::actor_config& cfg);
+    ~addition();
+  };
+  
+  class addition_factory : abstract_service_factory
+  {
+  public:
+   virtual caf::actor spawn(caf::actor_system& system);
   };
  
 }
 
-using namespace actmf;
+addition_factory Factory;
 
-caf::behavior addition_actor::awaiting_task()
+addition::addition(caf::actor_config& cfg): abstract_service(cfg)
 {
-    return {
-      [=](add_atom add, int x, int y) {
-	int res = x + y;
-	for(remote_actor ract : next_actors)
-	  this->send(ract.act, disp_num_atom::value, res);
+
+}
+
+caf::behavior addition::awaiting_task()
+{
+   return {
+      [=](int app_id, int x, int y) {
+        int res = x + y;
+        for(service serv : next_service[app_id])
+          this->send(serv.act, app_id, res);
       }
-    };
+  };
+}
+
+addition::~addition()
+{
+
+}
+
+caf::actor addition_factory::spawn(caf::actor_system& system)
+{
+  return system.spawn<addition>();
 }
 
 ```
