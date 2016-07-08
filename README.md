@@ -9,9 +9,9 @@ Folder structure
 
 Here is how the project is organized.
 
-	build
 	actmf_actor
 	actmf_application
+	actmf_interface
 	actmf_system
 	CMakeLists.txt
 	LICENCE
