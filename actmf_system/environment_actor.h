@@ -32,7 +32,7 @@ namespace actmf {
   private:
     int cur_app_id;
     caf::actor_system_config cfg;
-    caf::actor_system system{cfg};
+    caf::actor_system * system;
     caf::behavior awaiting_task();
   public:
     environment_actor(caf::actor_config& cfg);

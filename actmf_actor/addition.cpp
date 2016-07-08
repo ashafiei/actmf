@@ -44,8 +44,8 @@ addition::~addition()
 
 }
 
-caf::actor addition_factory::spawn(caf::actor_system& system)
+caf::actor addition_factory::spawn(caf::actor_system* system)
 {
-  return system.spawn<addition>();
+  return system->spawn<addition>();
 }
 

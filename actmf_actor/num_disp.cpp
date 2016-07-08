@@ -42,7 +42,7 @@ num_disp::~num_disp()
 
 }
 
-caf::actor num_disp_factory::spawn(caf::actor_system& system)
+caf::actor num_disp_factory::spawn(caf::actor_system* system)
 {
-  return system.spawn<num_disp>();
+  return system->spawn<num_disp>();
 }

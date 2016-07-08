@@ -17,40 +17,13 @@
  * 
  */
 
-#include "num_gen.h"
+#include "module_loader.h"
 
-using namespace actmf;
-
-num_gen_factory Factory;
-
-num_gen::num_gen(caf::actor_config& cfg): abstract_service(cfg)
+module_loader::module_loader()
 {
-
 }
 
-caf::behavior num_gen::awaiting_task()
-{
-  return {
-    [=](int app_id) {
-     int a = rand() % 10;
-     int b = rand() % 10;
-     for (service serv : next_service[app_id])
-     this->send(serv.act, app_id, a, b);
-     
-    },
-    caf::after(std::chrono::seconds(3)) >> [=] {
-     for (auto serv : next_service) 
-      this->send(this, serv.first);
-    }
-  };
-}
-
-num_gen::~num_gen()
+module_loader::~module_loader()
 {
 
-}
-
-caf::actor num_gen_factory::spawn(caf::actor_system* system)
-{
-  return system->spawn<num_gen>();
 }

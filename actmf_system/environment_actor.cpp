@@ -24,7 +24,9 @@ using namespace actmf;
 
 environment_actor::environment_actor(caf::actor_config& cfg): caf::event_based_actor(cfg)
 {
-
+    
+    this->cfg.load<caf::io::middleman>();
+    system = new caf::actor_system(this->cfg);
 }
 
 caf::behavior environment_actor::awaiting_task()
@@ -36,7 +38,6 @@ caf::behavior environment_actor::awaiting_task()
       },
       [=](create_app_atom create, std::string app) {
 	caf::aout(this) << app << std::endl;
-	
 	void *handl = dlopen("lib/libnum_gen_disp.so", RTLD_NOW);
 	if(handl == nullptr){
 	  caf::aout(this) << dlerror() << std::endl;
@@ -54,7 +55,7 @@ caf::behavior environment_actor::awaiting_task()
 	  exit(-1);
 	}
 
-	//system.middleman().publish(act, port);
+	system->middleman().publish(act, 6000);
 	
 	//act->spawn("127.0.0.1", 4000);
 	//abstract_actor *gendisp = static_cast<abstract_actor *()>(gendisp_hdl)();

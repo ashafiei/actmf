@@ -58,7 +58,7 @@ namespace actmf {
   
   class abstract_service_factory {
   public:
-    virtual caf::actor spawn(caf::actor_system& system) = 0;
+    virtual caf::actor spawn(caf::actor_system* system) = 0;
   };
 
 }

@@ -36,7 +36,7 @@ namespace actmf {
   class num_gen_factory : abstract_service_factory
   {
   public:
-   virtual caf::actor spawn(caf::actor_system& system);
+   virtual caf::actor spawn(caf::actor_system* system);
   };
  
 }
