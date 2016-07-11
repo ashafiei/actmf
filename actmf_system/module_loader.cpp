@@ -27,6 +27,10 @@ module_loader::module_loader()
   system = new caf::actor_system(this->cfg);
   cur_port = 6000;
 }
+void module_loader::load_application(const std::__cxx11::string& app)
+{
+  app_parser.parse(app);
+}
 
 service * module_loader::load_module(const std::__cxx11::string& module)
 {

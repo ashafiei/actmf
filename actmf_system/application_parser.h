@@ -20,11 +20,25 @@
 #ifndef APPLICATION_PARSER_H
 #define APPLICATION_PARSER_H
 
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <map>
+#include <sstream>
+#include <algorithm>
+
 class application_parser
 {
+private:
+  std::string conf;
+  std::string app_name;
+  std::map<std::string, std::vector<std::string>> data;
+  
 public:
-application_parser();
-~application_parser();
+  application_parser();
+  void parse(const std::string& conf);
+  ~application_parser();
 };
 
 #endif // APPLICATION_PARSER_H

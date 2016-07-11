@@ -19,10 +19,71 @@
 
 #include "application_parser.h"
 
+std::string trim(const std::string& str, char ch)
+{
+    size_t first = str.find_first_not_of(ch);
+    size_t last = str.find_last_not_of(ch);
+    return str.substr(first, (last-first+1));
+}
+
+std::tuple<std::string, std::string> get_tuple(const std::string& line, const std::string& c) {
+  
+    char *key = std::strtok(const_cast<char*>(line.c_str()), c.c_str());
+    char *val = std::strtok(NULL, c.c_str());
+    std::string key_str = trim(key, ' ');
+    std::string val_str = trim(val, ' ');
+    return std::make_tuple(key_str, val_str);
+}
+
+
 application_parser::application_parser()
 {
 
 }
+
+void application_parser::parse(const std::string& conf)
+{
+  this->conf = conf;
+  std::string con_str;
+  std::map<std::string, std::string> vars;
+  
+  std::istringstream f(conf);
+  std::string line;    
+  while (std::getline(f, line)) {
+    if (line.find("=") != std::string::npos) {
+      auto line_tok = get_tuple(line, "=");
+      std::string key = std::get<0>(line_tok);
+      std::string val = std::get<1>(line_tok);
+      if (key == "application")
+	app_name = trim(val, '\'');
+      else if (key == "connections")
+	con_str = val;
+      else
+	vars[key] = trim(val, '\'');
+    }
+  }
+
+  std::size_t start_pos = 0;
+  con_str.erase(std::find(con_str.begin(), con_str.end(), ']'));
+  
+  while (true) {
+    std::size_t pos_s = con_str.find("(", start_pos);
+    std::size_t pos_e = con_str.find(")", start_pos);
+    
+    if (pos_s == std::string::npos || pos_e == std::string::npos)
+      break;
+    
+    std::string tupstr = con_str.substr(pos_s, pos_e);
+    tupstr.erase(std::find(tupstr.begin(), tupstr.end(), '('));
+    tupstr.erase(std::find(tupstr.begin(), tupstr.end(), ')'));    
+    auto tup = get_tuple(tupstr, ",");
+    data[vars[std::get<0>(tup)]].push_back(vars[std::get<1>(tup)]);
+    
+    start_pos = pos_e + 1;
+  }
+  
+}
+
 
 application_parser::~application_parser()
 {

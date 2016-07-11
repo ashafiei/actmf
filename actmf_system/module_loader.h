@@ -21,6 +21,7 @@
 #define MODULE_LOADER_H
 
 #include "actmf_interface/abstract_service.h"
+#include "application_parser.h"
 #include "caf/all.hpp"
 #include "caf/io/all.hpp"
 #include <dlfcn.h>
@@ -42,8 +43,10 @@ namespace actmf {
     caf::actor_system_config cfg;
     caf::actor_system * system;
     std::map<std::string, service *> registry;
+    application_parser app_parser;
   public:
     module_loader();
+    void load_application(const std::string& app);
     service * load_module(const std::string& module);
     ~module_loader();
   };

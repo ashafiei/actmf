@@ -35,6 +35,7 @@ caf::behavior environment_actor::awaiting_task()
       },
       [=](create_app_atom create, std::string app) {
 	caf::aout(this) << app << std::endl;
+	ml.load_application(app);
 	ml.load_module("lib/libnum_gen_disp.so");
     }
   };
