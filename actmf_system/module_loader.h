@@ -20,11 +20,33 @@
 #ifndef MODULE_LOADER_H
 #define MODULE_LOADER_H
 
-class module_loader
-{
-public:
-module_loader();
-~module_loader();
-};
+#include "actmf_interface/abstract_service.h"
+#include "caf/all.hpp"
+#include "caf/io/all.hpp"
+#include <dlfcn.h>
+
+namespace actmf {
+  
+  struct service {
+    int id;
+    caf::actor * act;
+    std::string addr;
+    int16_t port;
+    std::string type;
+  };
+  
+  class module_loader
+  {
+  private:
+    int cur_port;
+    caf::actor_system_config cfg;
+    caf::actor_system * system;
+    std::map<std::string, service *> registry;
+  public:
+    module_loader();
+    service * load_module(const std::string& module);
+    ~module_loader();
+  };
+}
 
 #endif // MODULE_LOADER_H

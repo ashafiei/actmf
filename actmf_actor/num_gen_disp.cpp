@@ -46,7 +46,7 @@ num_gen_disp::~num_gen_disp()
 
 }
 
-caf::actor num_gen_disp_factory::spawn(caf::actor_system* system)
+caf::actor num_gen_disp_factory::spawn(caf::actor_system * system)
 {
   return system->spawn<num_gen_disp>();
 }

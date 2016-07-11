@@ -34,21 +34,13 @@ namespace actmf {
   
   using register_atom = caf::atom_constant<caf::atom("register")>;
   using create_app_atom = caf::atom_constant<caf::atom("create_app")>;
-
-  struct service {
-    int id;
-    caf::actor act;
-    std::string addr;
-    int16_t port;
-    std::string type;
-  };
   
   class abstract_service : public caf::event_based_actor
   {
   protected:
     virtual caf::behavior awaiting_task() = 0;
     caf::behavior awaiting_direction();
-    std::map<int, std::vector<service>> next_service;
+    std::map<int, std::vector<caf::actor>> next_service;
   public:
     abstract_service(caf::actor_config& cfg);
     caf::behavior make_behavior() override; 
@@ -58,7 +50,7 @@ namespace actmf {
   
   class abstract_service_factory {
   public:
-    virtual caf::actor spawn(caf::actor_system* system) = 0;
+    virtual caf::actor spawn(caf::actor_system * system) = 0;
   };
 
 }

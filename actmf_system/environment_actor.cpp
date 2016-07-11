@@ -17,7 +17,6 @@
  * 
  */
 
-#include <dlfcn.h>
 #include "environment_actor.h"
 
 using namespace actmf;
@@ -25,8 +24,6 @@ using namespace actmf;
 environment_actor::environment_actor(caf::actor_config& cfg): caf::event_based_actor(cfg)
 {
     
-    this->cfg.load<caf::io::middleman>();
-    system = new caf::actor_system(this->cfg);
 }
 
 caf::behavior environment_actor::awaiting_task()
@@ -38,35 +35,7 @@ caf::behavior environment_actor::awaiting_task()
       },
       [=](create_app_atom create, std::string app) {
 	caf::aout(this) << app << std::endl;
-	void *handl = dlopen("lib/libnum_gen_disp.so", RTLD_NOW);
-	if(handl == nullptr){
-	  caf::aout(this) << dlerror() << std::endl;
-	  exit(-1);
-	}
-	
-	abstract_service_factory *serv_factory = (abstract_service_factory*)dlsym(handl, "Factory");
-	if (serv_factory == nullptr) {
-	  std::cout << "act_factory is not created" << std::endl;
-	  exit(-1);
-	}
-	caf::actor act = serv_factory->spawn(system);
-	if (act == nullptr) {
-	  std::cout << "abstract_actor is not created" << std::endl;
-	  exit(-1);
-	}
-
-	system->middleman().publish(act, 6000);
-	
-	//act->spawn("127.0.0.1", 4000);
-	//abstract_actor *gendisp = static_cast<abstract_actor *()>(gendisp_hdl)();
-	//this->append_app(app);
-	//std::vector<component *> components = app.get_components();
-	//for (auto comp : components) {
-	//  comp->spawn("localhost", 4000);
-	//}
-	//system.middleman().publish(act, port);
-	//caf::aout(this) << "actor is listening on " << host << " on port " << port << std::endl; 
-	//system.middleman().unpublish(act, port);  
+	ml.load_module("lib/libnum_gen_disp.so");
     }
   };
 }

@@ -19,9 +19,52 @@
 
 #include "module_loader.h"
 
+using namespace actmf;
+
 module_loader::module_loader()
 {
+  this->cfg.load<caf::io::middleman>();
+  system = new caf::actor_system(this->cfg);
+  cur_port = 6000;
 }
+
+service * module_loader::load_module(const std::__cxx11::string& module)
+{
+  
+  service * serv = registry[module];
+  if (serv != nullptr)
+    return serv;
+  serv = new service();
+  
+  serv->addr = "127.0.0.1";
+  serv->port = cur_port++;
+  serv->type = module;
+  
+  void *handl = dlopen(module.c_str(), RTLD_NOW);
+  if(handl == nullptr){
+    std::cout << dlerror() << std::endl;
+    return nullptr;
+  }
+  
+  abstract_service_factory *serv_factory = (abstract_service_factory*)dlsym(handl, "Factory");
+  if (serv_factory == nullptr) {
+    std::cout << dlerror() << std::endl;
+    return nullptr;
+  }
+  caf::actor act = serv_factory->spawn(system);
+  serv->act = &act;
+  if (serv->act == nullptr) {
+    std::cout << "abstract_actor is not created" << std::endl;
+    return nullptr;
+  }
+  
+  registry[module] = serv;
+  
+  system->middleman().publish(*(serv->act), serv->port);
+  
+  return serv;
+}
+
 
 module_loader::~module_loader()
 {

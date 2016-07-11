@@ -24,15 +24,14 @@
 #include "caf/all.hpp"
 #include "caf/io/all.hpp"
 #include "actmf_interface/abstract_service.h"
+#include "module_loader.h"
 
 namespace actmf {
   
   class environment_actor : public caf::event_based_actor
   {
   private:
-    int cur_app_id;
-    caf::actor_system_config cfg;
-    caf::actor_system * system;
+    module_loader ml;
     caf::behavior awaiting_task();
   public:
     environment_actor(caf::actor_config& cfg);
