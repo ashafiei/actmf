@@ -77,7 +77,7 @@ namespace actmf {
   class addition_factory : abstract_service_factory
   {
   public:
-   virtual caf::actor spawn(caf::actor_system& system);
+   virtual caf::actor spawn(caf::actor_system* system);
   };
  
 }
@@ -94,8 +94,8 @@ caf::behavior addition::awaiting_task()
    return {
       [=](int app_id, int x, int y) {
         int res = x + y;
-        for(service serv : next_service[app_id])
-          this->send(serv.act, app_id, res);
+        for(auto act : next_service[app_id])
+          this->send(act, app_id, res);
       }
   };
 }
@@ -105,9 +105,9 @@ addition::~addition()
 
 }
 
-caf::actor addition_factory::spawn(caf::actor_system& system)
+caf::actor addition_factory::spawn(caf::actor_system* system)
 {
-  return system.spawn<addition>();
+  return system->spawn<addition>();
 }
 
 ```
