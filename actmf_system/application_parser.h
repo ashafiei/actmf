@@ -38,6 +38,9 @@ private:
 public:
   application_parser();
   void parse(const std::string& conf);
+  std::string get_app_name();
+  std::vector<std::string> get_nodes();
+  std::vector<std::string> get_connections(std::string node);
   ~application_parser();
 };
 

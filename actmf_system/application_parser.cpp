@@ -62,6 +62,11 @@ void application_parser::parse(const std::string& conf)
 	vars[key] = trim(val, '\'');
     }
   }
+  
+  for (auto v : vars) {
+    std::vector<std::string> vec;
+    data[v.second] = vec;
+  }
 
   std::size_t start_pos = 0;
   con_str.erase(std::find(con_str.begin(), con_str.end(), ']'));
@@ -83,6 +88,24 @@ void application_parser::parse(const std::string& conf)
   }
   
 }
+
+std::__cxx11::string application_parser::get_app_name()
+{
+  return app_name;
+}
+
+std::vector< std::__cxx11::string > application_parser::get_nodes()
+{
+  std::vector<std::string> res;
+  for (auto element : data) res.push_back(element.first);
+  return res;
+}
+
+std::vector< std::__cxx11::string > application_parser::get_connections(std::__cxx11::string node)
+{
+  return data[node];
+}
+
 
 
 application_parser::~application_parser()

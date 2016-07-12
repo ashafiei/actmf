@@ -40,7 +40,7 @@ namespace actmf {
   protected:
     virtual caf::behavior awaiting_task() = 0;
     caf::behavior awaiting_direction();
-    std::map<int, std::vector<caf::actor>> next_service;
+    std::map<std::string, std::vector<caf::actor>> next_service;
   public:
     abstract_service(caf::actor_config& cfg);
     caf::behavior make_behavior() override; 

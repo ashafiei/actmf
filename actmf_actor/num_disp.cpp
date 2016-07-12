@@ -31,7 +31,7 @@ num_disp::num_disp(caf::actor_config& cfg): abstract_service(cfg)
 caf::behavior num_disp::awaiting_task()
 {
   return {
-    [=](int app_id, int d) {
+    [=](std::string app_name, int d) {
       caf::aout(this) << "n = " << d << std::endl; 
     }
   };

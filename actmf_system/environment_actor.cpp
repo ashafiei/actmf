@@ -28,15 +28,17 @@ environment_actor::environment_actor(caf::actor_config& cfg): caf::event_based_a
 
 caf::behavior environment_actor::awaiting_task()
 {
-  std::cout << "In awaiting_task" << std::endl;
+  std::cout << "environment is waiting for connections..." << std::endl;
   return {
       [=](register_atom reg, caf::atom_value actname, std::string& host, int16_t port) {
 
       },
       [=](create_app_atom create, std::string app) {
-	caf::aout(this) << app << std::endl;
+	
+	caf::aout(this) << "environment received an application:\n" <<
+			    app << std::endl;
 	ml.load_application(app);
-	ml.load_module("lib/libnum_gen_disp.so");
+	
     }
   };
 }
