@@ -46,7 +46,8 @@ void module_loader::load_application(const std::__cxx11::string& app)
   for (auto n : nodes) {
     std::vector<std::string> connections = app_parser.get_connections(n);
     for (auto c : connections) {
-      caf::anon_send(*(registry[n]->act), app_name, *(registry[c]->act));
+      caf::anon_send(registry[n]->get_actor(), 
+		     app_name , registry[c]->get_actor());
     }
   }
 }
@@ -59,8 +60,8 @@ service * module_loader::load_module(const std::__cxx11::string& module)
     return serv;
   serv = new service();
   
-  serv->addr = "127.0.0.1";
-  serv->port = cur_port++;
+  serv->set_address("127.0.0.1");
+  serv->set_port(cur_port++);
   
   std::string module_file = "../lib/lib"+module+".so";
   void *handl = dlopen(module_file.c_str(), RTLD_NOW);
@@ -74,16 +75,16 @@ service * module_loader::load_module(const std::__cxx11::string& module)
     std::cout << dlerror() << std::endl;
     return nullptr;
   }
-  caf::actor act = serv_factory->spawn(system);
-  serv->act = &act;
-  if (serv->act == nullptr) {
+  serv->set_actor(serv_factory->spawn(system));
+  
+  if (!serv->has_actor()) {
     std::cout << "abstract_actor is not created" << std::endl;
     return nullptr;
   }
   
   registry[module] = serv;
   
-  system->middleman().publish(*(serv->act), serv->port);
+  system->middleman().publish(serv->get_actor(), serv->get_port());
   
   return serv;
 }
