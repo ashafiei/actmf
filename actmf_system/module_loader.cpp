@@ -38,14 +38,14 @@ void module_loader::load_application(const std::__cxx11::string& app)
   for (auto n : nodes) {
     std::cout << "node:" << n << std::endl;
     if (registry.find(n) == registry.end()) {
-      load_module("lib/lib"+n+".so");
-      std::cout << "module loaded:" << "lib/lib"+n+".so" << std::endl;
+      
+      load_module(n);
+      std::cout << "module loaded:" << n << std::endl;
     }
   }
   for (auto n : nodes) {
     std::vector<std::string> connections = app_parser.get_connections(n);
     for (auto c : connections) {
-      std::cout << "connection sent" << std::endl;
       caf::anon_send(*(registry[n]->act), app_name, *(registry[c]->act));
     }
   }
@@ -61,9 +61,9 @@ service * module_loader::load_module(const std::__cxx11::string& module)
   
   serv->addr = "127.0.0.1";
   serv->port = cur_port++;
-  serv->type = module;
   
-  void *handl = dlopen(module.c_str(), RTLD_NOW);
+  std::string module_file = "../lib/lib"+module+".so";
+  void *handl = dlopen(module_file.c_str(), RTLD_NOW);
   if(handl == nullptr){
     std::cout << dlerror() << std::endl;
     return nullptr;

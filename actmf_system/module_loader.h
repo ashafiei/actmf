@@ -29,11 +29,9 @@
 namespace actmf {
   
   struct service {
-    int id;
     caf::actor * act;
     std::string addr;
     int16_t port;
-    std::string type;
   };
   
   class module_loader
