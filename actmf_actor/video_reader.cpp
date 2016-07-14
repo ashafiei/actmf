@@ -39,13 +39,26 @@ caf::behavior video_reader::awaiting_task()
        next_service[app_name].push_back(act);
      },
      [=](std::string app_name) {
-       RawFrame * data;
-       int ret = vreader->readFrame(data); 
-       if (ret == -1) {
-	 //video ended
+       VideoData data;
+       for (int i=0; i<8; i++) {
+       
+	 data.buffer[i] = new uint8_t;
+	 *(data.buffer[i]) = i;
        }
-       //for(caf::actor act : next_service[app_name])
-       //  this->send(act, app_name, *data);
+       data.height = 100;
+       data.width = 200;
+       //RawFrame * data;
+       //AVFrame frame;
+       //int ret = vreader->readFrame(data); 
+       //if (ret == -1) {
+	 //video ended
+       //}
+       for(caf::actor act : next_service[app_name])
+         this->send(act, app_name, data);
+     },
+     caf::after(std::chrono::seconds(3)) >> [=] {
+       for (auto serv : next_service) 
+          this->send(this, serv.first);
      }
   };
 }

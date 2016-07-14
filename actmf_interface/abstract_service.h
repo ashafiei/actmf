@@ -22,9 +22,21 @@
 
 #include "caf/all.hpp"
 #include "caf/io/all.hpp"
+#include "tmmp/all.h"
 
-namespace actmf {
-
+namespace actmf {  
+  
+  struct VideoData {
+    uint8_t * buffer[8];
+    int width;
+    int height;
+  };
+  
+  template <class Inspector>
+  typename Inspector::result_type inspect(Inspector& f, VideoData& x) {
+    return f(caf::meta::type_name("VideoData"));
+  }
+  
   using direct_atom = caf::atom_constant<caf::atom("direct")>;
   
   using generate_atom = caf::atom_constant<caf::atom("generate")>;  
