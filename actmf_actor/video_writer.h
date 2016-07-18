@@ -28,7 +28,7 @@ namespace actmf {
   class video_writer : public abstract_service
   {
   private:
-
+    VideoWriter * vwriter;
   protected:
     virtual caf::behavior awaiting_task();
   public:

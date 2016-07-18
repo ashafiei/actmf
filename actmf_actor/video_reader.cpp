@@ -25,7 +25,7 @@ video_reader_factory Factory;
 
 video_reader::video_reader(caf::actor_config& cfg): abstract_service(cfg)
 {
-  vreader = new VideoReader("bbb.mp4");
+  vreader = new VideoReader("/home/sh/Videos/bbb.mp4");
   //vreader->setVideoFromat(videoFromat);
   //vreader->setInputFormat(inputFormat);
   //vreader->setFramerate(framerate);
@@ -39,22 +39,19 @@ caf::behavior video_reader::awaiting_task()
        next_service[app_name].push_back(act);
      },
      [=](std::string app_name) {
-       VideoData data;
-       for (int i=0; i<8; i++) {
        
-	 data.buffer[i] = new uint8_t;
-	 *(data.buffer[i]) = i;
-       }
-       data.height = 100;
-       data.width = 200;
-       //RawFrame * data;
-       //AVFrame frame;
-       //int ret = vreader->readFrame(data); 
-       //if (ret == -1) {
+       int ret = vreader->readFrame(&data); 
+       if (ret == -1) {
 	 //video ended
-       //}
-       for(caf::actor act : next_service[app_name])
+       }
+       caf::aout(this) << "data0--- " << *(data.getFrame()->data[0]) << " --- \n"; 
+       caf::aout(this) << "data1--- " << *(data.getFrame()->data[1]) << " --- \n"; 
+       caf::aout(this) << "width--- " << data.getFrame()->width << " --- \n"; 
+       caf::aout(this) << "data is read\n";
+       for(caf::actor act : next_service[app_name]) {
          this->send(act, app_name, data);
+	 caf::aout(this) << "data is sent\n";
+       }
      },
      caf::after(std::chrono::seconds(3)) >> [=] {
        for (auto serv : next_service) 

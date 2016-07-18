@@ -25,30 +25,6 @@
 
 namespace actmf {
   
-  template <class Inspector>
-  typename Inspector::result_type inspect(Inspector& f, AVFrameSideData& x) {
-    return f(caf::meta::type_name("AVFrameSideData")
-    );
-  }
-  
-  template <class Inspector>
-  typename Inspector::result_type inspect(Inspector& f, AVBufferRef& x) {
-    return f(caf::meta::type_name("AVBufferRef")
-    );
-  }
-  template <class Inspector>
-  typename Inspector::result_type inspect(Inspector& f, AVRational& x) {
-    return f(caf::meta::type_name("AVRational")
-    );
-  }
-  
-
-  template <class Inspector>
-  typename Inspector::result_type inspect(Inspector& f, AVFrame& x) {
-    return f(caf::meta::type_name("AVFrame")
-    );
-  }
-  
 
   
   //  template <class Inspector>
@@ -78,6 +54,7 @@ namespace actmf {
   {
   private:
     VideoReader * vreader;
+    RawFrame data;
   protected:
     virtual caf::behavior awaiting_task();
   public:
