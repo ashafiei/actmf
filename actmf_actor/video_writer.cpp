@@ -34,7 +34,7 @@ caf::behavior video_writer::awaiting_task()
    return {
      [=](std::string app_name, RawFrame data) {
        caf::aout(this) << "data is received\n";
-       AVFrame * f = data.getFrame();
+       AVFrame * f = data.getFrameRef();
        caf::aout(this) << "width--- " << f->width << " ---\n";
        //vwriter->write(&data);
        caf::aout(this) << "data is written\n";       
