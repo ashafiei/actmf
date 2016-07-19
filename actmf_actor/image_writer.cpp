@@ -33,9 +33,7 @@ caf::behavior image_writer::awaiting_task()
 {
    return {
      [=](std::string app_name, RawFrame data) {
-       caf::aout(this) << "data is received\n";
-       AVFrame * f = data.getFrameRef();
-       caf::aout(this) << "width--- " << f->width << " ---\n";
+       caf::aout(this) << "writing frame number:" << data.getNumber() << "\n";       
        iwriter->writeImage(&data);
        //caf::aout(this) << "data is written\n";       
        //caf::aout(this) << *(data.data->data[0]) << data.data->width << std::endl;

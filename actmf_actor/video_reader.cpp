@@ -44,14 +44,13 @@ caf::behavior video_reader::awaiting_task()
        if (ret == -1) {
 	 //video ended
        }
-       caf::aout(this) << "width--- " << data.getFrameRef()->width << " --- \n"; 
-       caf::aout(this) << "data is read\n";
+       
        for(caf::actor act : next_service[app_name]) {
          this->send(act, app_name, data);
-	 caf::aout(this) << "data is sent\n";
+	 caf::aout(this) << "sending frame number:" << data.getNumber() << "\n";
        }
      },
-     caf::after(std::chrono::seconds(3)) >> [=] {
+     caf::after(std::chrono::seconds(1)) >> [=] {
        for (auto serv : next_service) 
           this->send(this, serv.first);
      }
