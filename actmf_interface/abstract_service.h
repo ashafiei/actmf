@@ -24,62 +24,7 @@
 #include "caf/io/all.hpp"
 #include "tmmp/all.h"
 
-namespace actmf {  
-  
-  typedef struct VideoData {
-    uint8_t * buffer[8];
-    int width;
-    int height;
-  } VideoData;
-
-  template <class Inspector>
-  typename Inspector::result_type inspect(Inspector& f, AVRational& x) {
-    return f(caf::meta::type_name("AVRational"), x.num, x.den
-    );
-  }
-  
-  /*
-  template <class Inspector>
-  typename Inspector::result_type inspect(Inspector& f, VideoData& x) {
-    return f(caf::meta::type_name("VideoData"));
-  }
-  
-    template <class Inspector>
-  typename Inspector::result_type inspect(Inspector& f, AVFrameSideData& x) {
-    return f(caf::meta::type_name("AVFrameSideData")
-    );
-  }
-  
-  template <class Inspector>
-  typename Inspector::result_type inspect(Inspector& f, AVBufferRef& x) {
-    return f(caf::meta::type_name("AVBufferRef")
-    );
-  }
-  
-  //template <class Inspector>
-  //typename Inspector::result_type inspect(Inspector& f, AVRational& x) {
-  //  return f(caf::meta::type_name("AVRational"), x.num, x.den
-  //  );
-  //}
-  
-  template <class Inspector>
-  typename Inspector::result_type inspect(Inspector& f, AVFrame& x) {
-    return f(caf::meta::type_name("AVFrame"));
-  }
-
-  template <class Inspector>
-  typename std::enable_if<Inspector::is_loading::value,
-                        typename Inspector::result_type>::type
-  inspect(Inspector& f, RawFrame& x) {
-    AVFrame data;
-    uint8_t buffer;
-    // write back to x at scope exit
-    auto g = caf::detail::make_scope_guard([&] {
-      x.setBuffer(&buffer);
-      x.setFrame(&data);
-    });
-    return f(caf::meta::type_name("RawFrame"), data, buffer);
-  }*/
+namespace actmf {
   
   using direct_atom = caf::atom_constant<caf::atom("direct")>;
   

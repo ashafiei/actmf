@@ -44,7 +44,7 @@ caf::behavior video_reader::awaiting_task()
        if (ret == -1) {
 	 //video ended
        }
-       caf::aout(this) << "width--- " << data->width << " --- \n"; 
+       caf::aout(this) << "width--- " << data.getFrameRef()->width << " --- \n"; 
        caf::aout(this) << "data is read\n";
        for(caf::actor act : next_service[app_name]) {
          this->send(act, app_name, data);

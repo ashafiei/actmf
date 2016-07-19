@@ -26,7 +26,7 @@ video_writer_factory Factory;
 video_writer::video_writer(caf::actor_config& cfg): abstract_service(cfg)
 {
   vwriter = new VideoWriter();
-  vwriter->init("/home/sh/Videos/bbb2.mp4", 640, 480);
+  vwriter->init("/home/sh/Videos/", 1280, 720);
 }
 
 caf::behavior video_writer::awaiting_task()
@@ -36,8 +36,8 @@ caf::behavior video_writer::awaiting_task()
        caf::aout(this) << "data is received\n";
        AVFrame * f = data.getFrameRef();
        caf::aout(this) << "width--- " << f->width << " ---\n";
-       //vwriter->write(&data);
-       caf::aout(this) << "data is written\n";       
+       vwriter->write(&data);
+       //caf::aout(this) << "data is written\n";       
        //caf::aout(this) << *(data.data->data[0]) << data.data->width << std::endl;
        //caf::aout(this) << *(data.buffer[0]) << *(data.buffer[1])
        //<< *(data.buffer[2]) << *(data.buffer[3]) << *(data.buffer[4])
