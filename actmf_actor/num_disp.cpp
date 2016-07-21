@@ -23,26 +23,15 @@ using namespace actmf;
 
 num_disp_factory Factory;
 
-num_disp::num_disp(caf::actor_config& cfg): abstract_service(cfg)
+caf::result< int > num_disp_bhvr::operator()(caf::param< string > app, int d)
 {
-
+  caf::aout(servp) << "n = " << d << std::endl; 
 }
 
-caf::behavior num_disp::awaiting_task()
+
+void num_disp_factory::spawn(caf::actor_system * sys, int port)
 {
-  return {
-    [=](std::string app_name, int d) {
-      caf::aout(this) << "n = " << d << std::endl; 
-    }
-  };
+  auto act = sys->spawn<num_disp_bhvr>();
+  sys->middleman().publish(act, port);
 }
 
-num_disp::~num_disp()
-{
-
-}
-
-caf::actor num_disp_factory::spawn(caf::actor_system * system)
-{
-  return system->spawn<num_disp>();
-}

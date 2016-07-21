@@ -25,47 +25,23 @@
 
 namespace actmf {
   
-
+  using video_reader_actor = 
+  caf::typed_actor<caf::replies_to<string>::with<int>>;
   
-  //  template <class Inspector>
-  //typename Inspector::result_type inspect(Inspector& f, AVFrame& x) {
-    
-    //return f(caf::meta::type_name("AVFrame"), 
-    //  x.base, x.best_effort_timestamp,
-    //  x.buf, x.buffer_hints, x.channel_layout, x.channels, x.chroma_location,
-    //  x.coded_picture_number, x.color_primaries, x.color_range, x.color_trc,
-    //  x.colorspace, x.data, x.dct_coeff, x.decode_error_flags, x.display_picture_number,
-    //  x.error, x.extended_buf, x.extended_data, x.flags, x.format,
-    //  x.height, x.hwaccel_picture_private, x.interlaced_frame,
-    //  x.key_frame, x.linesize, x.mb_type, x.mbskip_table, x.metadata,
-    //  x.motion_subsample_log2, x.motion_val, x.nb_extended_buf,
-    //  x.nb_samples, x.nb_side_data, x.opaque, x.owner, x.palette_has_changed,
-    //  x.pan_scan, x.pict_type, x.pkt_dts, x.pkt_duration, x.pkt_pos,
-    //  x.pkt_pts, x.pkt_size, x.pts, x.qp_table_buf, x.qscale_table,
-    //  x.qscale_type, x.qstride, x.quality, x.ref_index, x.reference,
-    //  x.reordered_opaque, x.repeat_pict, x.sample_aspect_ratio,
-    //  x.sample_rate, x.side_data, x.thread_opaque, x.top_field_first,
-    //  x.type, 
-    //	x.width
-    //);
-  //}
-  
-  class video_reader : public abstract_service
-  {
+  class video_reader_bhvr : public
+  caf::composed_behavior<caf::composable_behavior<video_reader_actor>, abstract_service_bhvr> {
   private:
     VideoReader * vreader;
     RawFrame data;
-  protected:
-    virtual caf::behavior awaiting_task();
   public:
-    video_reader(caf::actor_config& cfg);
-    ~video_reader();
+    video_reader_bhvr();
+    caf::result<int> operator()(caf::param<string>) override; 
   };
   
   class video_reader_factory : abstract_service_factory
   {
   public:
-   virtual caf::actor spawn(caf::actor_system * system);
+   virtual void spawn(caf::actor_system * sys, int port);
   };
  
 }

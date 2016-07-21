@@ -23,33 +23,21 @@ using namespace actmf;
 
 image_writer_factory Factory;
 
-image_writer::image_writer(caf::actor_config& cfg): abstract_service(cfg)
+image_writer_bhvr::image_writer_bhvr()
 {
   iwriter = new ImageWriter(1280, 720, AV_PIX_FMT_YUV420P);
   iwriter->setPath("/home/sh/Videos/");
 }
 
-caf::behavior image_writer::awaiting_task()
+caf::result< int > image_writer_bhvr::operator()(caf::param< string > app, caf::param< RawFrame > frame)
 {
-   return {
-     [=](std::string app_name, RawFrame data) {
-       caf::aout(this) << "writing frame number:" << data.getNumber() << "\n";       
-       iwriter->writeImage(&data);
-       //caf::aout(this) << "data is written\n";       
-       //caf::aout(this) << *(data.data->data[0]) << data.data->width << std::endl;
-       //caf::aout(this) << *(data.buffer[0]) << *(data.buffer[1])
-       //<< *(data.buffer[2]) << *(data.buffer[3]) << *(data.buffer[4])
-       //<< data.height << data.width << std::endl;
-     }
-  };
+  RawFrame f = frame.get();
+  caf::aout(servp) << "writing frame number:" << f.getNumber() << "\n";        
+  iwriter->writeImage(&f);
 }
 
-image_writer::~image_writer()
+void image_writer_factory::spawn(caf::actor_system * sys, int port)
 {
-
-}
-
-caf::actor image_writer_factory::spawn(caf::actor_system * system)
-{
-  return system->spawn<image_writer>();
+  auto act = sys->spawn<image_writer_bhvr>();
+  sys->middleman().publish(act, port);
 }

@@ -25,21 +25,22 @@
 
 namespace actmf {
   
-  class image_writer : public abstract_service
-  {
+  using image_writer_actor = 
+  caf::typed_actor<caf::replies_to<string, RawFrame>::with<int>>;
+  
+  class image_writer_bhvr : public
+  caf::composed_behavior<caf::composable_behavior<image_writer_actor>, abstract_service_bhvr> {
   private:
     ImageWriter * iwriter;
-  protected:
-    virtual caf::behavior awaiting_task();
   public:
-    image_writer(caf::actor_config& cfg);
-    ~image_writer();
+    image_writer_bhvr();
+    caf::result<int> operator()(caf::param<string>, caf::param<RawFrame>) override; 
   };
   
   class image_writer_factory : abstract_service_factory
   {
   public:
-   virtual caf::actor spawn(caf::actor_system * system);
+   virtual void spawn(caf::actor_system * sys, int port);
   };
  
 }

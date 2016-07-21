@@ -21,29 +21,17 @@
 
 using namespace actmf;
 
-abstract_service::abstract_service(caf::actor_config& cfg):
-caf::event_based_actor(cfg)
+caf::result< int > abstract_service_bhvr::operator()(caf::param< string > app, caf::param< string > host, int port)
 {
-
+  service * serv = new service;
+  auto eact = servp->system().middleman().remote_actor(host, port);
+  if (!eact)
+    throw std::runtime_error(servp->system().render(eact.error()));
+  caf::actor act = std::move(*eact);
+  serv->set_address(host);
+  serv->set_port(port);
+  serv->set_actor(act);
+  next_service[app.get()].push_back(serv);
+  return 0;
 }
 
-caf::behavior abstract_service::make_behavior()
-{
-  this->become(awaiting_task());
-  return {};
-}
-
-caf::behavior abstract_service::awaiting_direction()
-{
-    return {
-      [=](direct_atom direct, const std::string& host, int16_t port) {
-       
-	this->unbecome();
-      }
-    };
-}
-
-abstract_service::~abstract_service()
-{
-
-}

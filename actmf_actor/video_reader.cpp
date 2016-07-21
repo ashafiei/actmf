@@ -23,46 +23,35 @@ using namespace actmf;
 
 video_reader_factory Factory;
 
-video_reader::video_reader(caf::actor_config& cfg): abstract_service(cfg)
+video_reader_bhvr::video_reader_bhvr()
 {
   vreader = new VideoReader("/home/sh/Videos/bbb.mp4");
-  //vreader->setVideoFromat(videoFromat);
-  //vreader->setInputFormat(inputFormat);
-  //vreader->setFramerate(framerate);
   vreader->init();
 }
 
-caf::behavior video_reader::awaiting_task()
+caf::result< int > video_reader_bhvr::operator()(caf::param< string > app)
 {
-   return {
-     [=] (std::string app_name, caf::actor act) {
-       next_service[app_name].push_back(act);
-     },
-     [=](std::string app_name) {
-       
-       int ret = vreader->readFrame(&data); 
-       if (ret == -1) {
-	 //video ended
-       }
-       
-       for(caf::actor act : next_service[app_name]) {
-         this->send(act, app_name, data);
-	 caf::aout(this) << "sending frame number:" << data.getNumber() << "\n";
-       }
-     },
-     caf::after(std::chrono::seconds(1)) >> [=] {
-       for (auto serv : next_service) 
-          this->send(this, serv.first);
-     }
-  };
+  int ret = vreader->readFrame(&data); 
+  if (ret == -1) {
+    //video ended
+    
+  }
+  
+  for(service * serv : next_service[app.get()]) {
+    caf::anon_send(serv->get_actor(), app.get(), data);
+    caf::aout(servp) << "sending frame number:" << data.getNumber() << "\n";
+  }
 }
 
-video_reader::~video_reader()
-{
+   //TODO return {
+   //  caf::after(std::chrono::seconds(1)) >> [=] {
+   //    for (auto serv : next_service) 
+   //       this->send(this, serv.first);
+   //  }
+   //};
 
-}
-
-caf::actor video_reader_factory::spawn(caf::actor_system * system)
+void video_reader_factory::spawn(caf::actor_system * sys, int port)
 {
-  return system->spawn<video_reader>();
+  auto act = sys->spawn<video_reader_bhvr>();
+  sys->middleman().publish(act, port);
 }

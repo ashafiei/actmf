@@ -36,22 +36,43 @@ namespace actmf {
   using register_atom = caf::atom_constant<caf::atom("register")>;
   using create_app_atom = caf::atom_constant<caf::atom("create_app")>;
   
-  class abstract_service : public caf::event_based_actor
-  {
-  protected:
-    virtual caf::behavior awaiting_task() = 0;
-    caf::behavior awaiting_direction();
-    std::map<std::string, std::vector<caf::actor>> next_service;
+  class service {
+  private:
+    caf::actor * act;
+    std::string addr;
+    int16_t port;
   public:
-    abstract_service(caf::actor_config& cfg);
-    caf::behavior make_behavior() override; 
-    ~abstract_service();
+    void set_actor(const caf::actor& act) {
+      this->act = new caf::actor(act);
+    }
+    void set_address(std::string addr) {
+      this->addr = addr;
+    }
+    void set_port(int16_t port) {
+      this->port = port;
+    }
+    bool has_actor() { return act != nullptr; }
+    caf::actor get_actor() { return *act; }
+    std::string get_address() { return addr; }
+    int16_t get_port() { return port; }
+  };
+  
+  using abstract_service_actor = 
+  caf::typed_actor<caf::replies_to<string, string, int>::with<int>>;
+
+  class abstract_service_bhvr : 
+  public caf::composable_behavior<abstract_service_actor> {
+  protected:
+    std::map<std::string, std::vector<service *>> next_service;
+    abstract_service_actor::pointer servp;
+  public:
+    caf::result<int> operator()(caf::param<string>, caf::param<string>, int) override;
     
   };
   
   class abstract_service_factory {
   public:
-    virtual caf::actor spawn(caf::actor_system * system) = 0;
+    virtual void spawn(caf::actor_system * sys, int port) = 0;
   };
 
 }

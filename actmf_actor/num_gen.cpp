@@ -23,36 +23,26 @@ using namespace actmf;
 
 num_gen_factory Factory;
 
-num_gen::num_gen(caf::actor_config& cfg): abstract_service(cfg)
+caf::result< int > num_disp_bhvr::operator()(caf::param< string > app)
 {
-
+  //TODO for loop
+  int a = rand() % 10;
+  int b = rand() % 10;
+  for (service * serv : next_service[app.get()])
+    caf::anon_send(serv->get_actor(), app.get(), a, b);
 }
 
-caf::behavior num_gen::awaiting_task()
-{
-  return {
-    [=] (std::string app_name, caf::actor act) {
-      next_service[app_name].push_back(act);
-    },
-    [=](std::string app_name) {
-     int a = rand() % 10;
-     int b = rand() % 10;
-     for (caf::actor act : next_service[app_name])
-      this->send(act, app_name, a, b);
-    },
-    caf::after(std::chrono::seconds(3)) >> [=] {
-     for (auto serv : next_service) 
-      this->send(this, serv.first);
-    }
-  };
-}
+  //TODO {
+  //  caf::after(std::chrono::seconds(3)) >> [=] {
+  //   for (auto serv : next_service) 
+  //    this->send(this, serv.first);
+  //  }
+  //};
 
-num_gen::~num_gen()
-{
 
-}
 
-caf::actor num_gen_factory::spawn(caf::actor_system * system)
+void num_gen_factory::spawn(caf::actor_system * sys, int port)
 {
-  return system->spawn<num_gen>();
+  auto act = sys->spawn<num_disp_bhvr>();
+  sys->middleman().publish(act, port);
 }
