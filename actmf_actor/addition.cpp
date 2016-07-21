@@ -30,13 +30,13 @@ addition::addition(caf::actor_config& cfg): abstract_service(cfg)
 caf::behavior addition::awaiting_task()
 {
    return {
-     [=] (std::string app_name, caf::actor act) {
-       next_service[app_name].push_back(act);
+     [=] (std::string app_name, std::string host, int16_t port) {
+       insert_service(app_name, host, port);
      },
      [=](std::string app_name, int x, int y) {
        int res = x + y;
-       for(caf::actor act : next_service[app_name])
-         this->send(act, app_name, res);
+       for(service * serv : next_service[app_name])
+         this->send(serv->get_actor(), app_name, res);
      }
   };
 }

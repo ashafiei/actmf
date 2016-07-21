@@ -28,27 +28,6 @@
 
 namespace actmf {
   
-  class service {
-  private:
-    caf::actor * act;
-    std::string addr;
-    int16_t port;
-  public:
-    void set_actor(const caf::actor& act) {
-      this->act = new caf::actor(act);
-    }
-    void set_address(std::string addr) {
-      this->addr = addr;
-    }
-    void set_port(int16_t port) {
-      this->port = port;
-    }
-    bool has_actor() { return act != nullptr; }
-    caf::actor get_actor() { return *act; }
-    std::string get_address() { return addr; }
-    int16_t get_port() { return port; }
-  };
-  
   class module_loader
   {
   private:

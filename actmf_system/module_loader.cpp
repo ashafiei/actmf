@@ -47,7 +47,8 @@ void module_loader::load_application(const std::__cxx11::string& app)
     std::vector<std::string> connections = app_parser.get_connections(n);
     for (auto c : connections) {
       caf::anon_send(registry[n]->get_actor(), 
-		     app_name , registry[c]->get_actor());
+		     app_name , registry[c]->get_address(),
+		     registry[c]->get_port());
     }
   }
 }

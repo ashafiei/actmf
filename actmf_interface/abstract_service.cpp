@@ -43,6 +43,20 @@ caf::behavior abstract_service::awaiting_direction()
     };
 }
 
+void abstract_service::insert_service(string app, string host, int16_t port)
+{
+       service * serv = new service;
+       auto eact = this->system().middleman().remote_actor(host, port);
+       if (!eact)
+	 throw std::runtime_error(this->system().render(eact.error()));
+       caf::actor act = std::move(*eact);
+       serv->set_address(host);
+       serv->set_port(port);
+       serv->set_actor(act);
+       next_service[app].push_back(serv);
+}
+
+
 abstract_service::~abstract_service()
 {
 

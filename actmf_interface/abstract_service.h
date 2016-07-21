@@ -36,12 +36,34 @@ namespace actmf {
   using register_atom = caf::atom_constant<caf::atom("register")>;
   using create_app_atom = caf::atom_constant<caf::atom("create_app")>;
   
+  class service {
+  private:
+    caf::actor * act;
+    std::string addr;
+    int16_t port;
+  public:
+    void set_actor(const caf::actor& act) {
+      this->act = new caf::actor(act);
+    }
+    void set_address(std::string addr) {
+      this->addr = addr;
+    }
+    void set_port(int16_t port) {
+      this->port = port;
+    }
+    bool has_actor() { return act != nullptr; }
+    caf::actor get_actor() { return *act; }
+    std::string get_address() { return addr; }
+    int16_t get_port() { return port; }
+  };
+  
   class abstract_service : public caf::event_based_actor
   {
   protected:
     virtual caf::behavior awaiting_task() = 0;
     caf::behavior awaiting_direction();
-    std::map<std::string, std::vector<caf::actor>> next_service;
+    void insert_service(std::string app, std::string host, int16_t port);
+    std::map<std::string, std::vector<service *>> next_service;
   public:
     abstract_service(caf::actor_config& cfg);
     caf::behavior make_behavior() override; 

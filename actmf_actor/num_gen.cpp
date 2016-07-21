@@ -31,14 +31,14 @@ num_gen::num_gen(caf::actor_config& cfg): abstract_service(cfg)
 caf::behavior num_gen::awaiting_task()
 {
   return {
-    [=] (std::string app_name, caf::actor act) {
-      next_service[app_name].push_back(act);
+    [=] (std::string app_name, string host, int16_t port) {
+      insert_service(app_name, host, port);
     },
     [=](std::string app_name) {
      int a = rand() % 10;
      int b = rand() % 10;
-     for (caf::actor act : next_service[app_name])
-      this->send(act, app_name, a, b);
+     for (service * serv : next_service[app_name])
+      this->send(serv->get_actor(), app_name, a, b);
     },
     caf::after(std::chrono::seconds(3)) >> [=] {
      for (auto serv : next_service) 
