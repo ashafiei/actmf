@@ -36,8 +36,8 @@ caf::result< int > image_writer_bhvr::operator()(caf::param< string > app, caf::
   iwriter->writeImage(&f);
 }
 
-void image_writer_factory::spawn(caf::actor_system * sys, int port)
+caf::actor image_writer_factory::spawn(caf::actor_system * sys)
 {
   auto act = sys->spawn<image_writer_bhvr>();
-  sys->middleman().publish(act, port);
+  return caf::actor_cast<caf::actor>(act);
 }

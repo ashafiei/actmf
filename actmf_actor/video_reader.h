@@ -41,7 +41,7 @@ namespace actmf {
   class video_reader_factory : abstract_service_factory
   {
   public:
-   virtual void spawn(caf::actor_system * sys, int port);
+   virtual caf::actor spawn(caf::actor_system * sys);
   };
  
 }

@@ -32,8 +32,8 @@ caf::result< int > addition_bhvr::operator()(caf::param< string > app, int x, in
 }
 
 
-void addition_factory::spawn(caf::actor_system * sys, int port)
+caf::actor addition_factory::spawn(caf::actor_system * sys)
 {
   auto act = sys->spawn<addition_bhvr>();
-  sys->middleman().publish(act, port);
+  return caf::actor_cast<caf::actor>(act);
 }

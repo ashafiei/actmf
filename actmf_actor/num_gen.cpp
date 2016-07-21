@@ -41,8 +41,8 @@ caf::result< int > num_disp_bhvr::operator()(caf::param< string > app)
 
 
 
-void num_gen_factory::spawn(caf::actor_system * sys, int port)
+caf::actor num_gen_factory::spawn(caf::actor_system * sys)
 {
   auto act = sys->spawn<num_disp_bhvr>();
-  sys->middleman().publish(act, port);
+  return caf::actor_cast<caf::actor>(act);
 }

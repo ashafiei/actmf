@@ -21,13 +21,13 @@
 
 using namespace actmf;
 
-caf::result< int > abstract_service_bhvr::operator()(caf::param< string > app, caf::param< string > host, int port)
+caf::result< int > abstract_service_bhvr::operator()(caf::param< string > app, caf::param< string > host, int16_t port)
 {
   service * serv = new service;
   auto eact = servp->system().middleman().remote_actor(host, port);
   if (!eact)
     throw std::runtime_error(servp->system().render(eact.error()));
-  caf::actor act = std::move(*eact);
+  caf::actor act = caf::actor_cast<caf::actor>(std::move(*eact));
   serv->set_address(host);
   serv->set_port(port);
   serv->set_actor(act);

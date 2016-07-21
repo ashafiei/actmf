@@ -58,7 +58,7 @@ namespace actmf {
   };
   
   using abstract_service_actor = 
-  caf::typed_actor<caf::replies_to<string, string, int>::with<int>>;
+  caf::typed_actor<caf::replies_to<string, string, int16_t>::with<int>>;
 
   class abstract_service_bhvr : 
   public caf::composable_behavior<abstract_service_actor> {
@@ -66,13 +66,13 @@ namespace actmf {
     std::map<std::string, std::vector<service *>> next_service;
     abstract_service_actor::pointer servp;
   public:
-    caf::result<int> operator()(caf::param<string>, caf::param<string>, int) override;
+    caf::result<int> operator()(caf::param<string>, caf::param<string>, int16_t) override;
     
   };
   
   class abstract_service_factory {
   public:
-    virtual void spawn(caf::actor_system * sys, int port) = 0;
+    virtual caf::actor spawn(caf::actor_system * sys) = 0;
   };
 
 }
