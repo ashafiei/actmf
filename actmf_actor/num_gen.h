@@ -25,18 +25,19 @@
 namespace actmf {
   
   using num_gen_actor = 
-  caf::typed_actor<caf::replies_to<string>::with<int>>;
+  caf::typed_actor<caf::replies_to<bool>::with<int>>;
   
   class num_disp_bhvr : public
   caf::composed_behavior<caf::composable_behavior<num_gen_actor>, abstract_service_bhvr> {
   public:
-    caf::result<int> operator()(caf::param<string>) override; 
+    caf::result<int> operator()(bool) override; 
   };
   
   class num_gen_factory : abstract_service_factory
   {
-  public:
-   virtual caf::actor spawn(caf::actor_system * sys);
+  protected:
+    virtual void init(caf::actor);
+    virtual caf::actor spawn();
   };
  
 }

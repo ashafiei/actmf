@@ -23,26 +23,32 @@ using namespace actmf;
 
 num_gen_factory Factory;
 
-caf::result< int > num_disp_bhvr::operator()(caf::param< string > app)
+caf::result< int > num_disp_bhvr::operator()(bool b)
 {
-  //TODO for loop
-  int a = rand() % 10;
-  int b = rand() % 10;
-  for (service * serv : next_service[app.get()])
-    caf::anon_send(serv->get_actor(), app.get(), a, b);
+  while (true) {
+    std::cout << "called...\n";
+    int a = rand() % 10;
+    int b = rand() % 10;
+    for (auto ns : next_service) {
+      std::cout << ns.first << std::endl;
+      for (service * serv : ns.second) {
+	std::cout << "send to " << serv->get_address() 
+	<< serv->get_port() << ns.first << std::endl;
+	caf::anon_send(serv->get_actor(), ns.first, a, b);
+      }
+    }
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+  }
+  
+  return 0;
 }
 
-  //TODO {
-  //  caf::after(std::chrono::seconds(3)) >> [=] {
-  //   for (auto serv : next_service) 
-  //    this->send(this, serv.first);
-  //  }
-  //};
+void num_gen_factory::init(caf::actor act) {
+  caf::anon_send(act, true);
+}
 
-
-
-caf::actor num_gen_factory::spawn(caf::actor_system * sys)
+caf::actor num_gen_factory::spawn()
 {
-  auto act = sys->spawn<num_disp_bhvr>();
+  auto act = system->spawn<num_disp_bhvr>();
   return caf::actor_cast<caf::actor>(act);
 }

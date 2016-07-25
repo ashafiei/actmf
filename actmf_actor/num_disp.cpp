@@ -23,15 +23,15 @@ using namespace actmf;
 
 num_disp_factory Factory;
 
-caf::result< int > num_disp_bhvr::operator()(caf::param< string > app, int d)
+caf::result< int > num_disp_bhvr::operator()(caf::param< std::string > app, int d)
 {
-  caf::aout(servp) << "n = " << d << std::endl; 
+  std::cout << "n = " << d << std::endl; 
 }
 
 
-caf::actor num_disp_factory::spawn(caf::actor_system * sys)
+caf::actor num_disp_factory::spawn()
 {
-  auto act = sys->spawn<num_disp_bhvr>();
+  auto act = system->spawn<num_disp_bhvr>();
   return caf::actor_cast<caf::actor>(act);
 }
 

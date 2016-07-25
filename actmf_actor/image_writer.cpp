@@ -25,19 +25,16 @@ image_writer_factory Factory;
 
 image_writer_bhvr::image_writer_bhvr()
 {
-  iwriter = new ImageWriter(1280, 720, AV_PIX_FMT_YUV420P);
-  iwriter->setPath("/home/sh/Videos/");
+
 }
 
-caf::result< int > image_writer_bhvr::operator()(caf::param< string > app, caf::param< RawFrame > frame)
+caf::result< int > image_writer_bhvr::operator()(caf::param< std::string > app, caf::param< opencv_mat > frame)
 {
-  RawFrame f = frame.get();
-  caf::aout(servp) << "writing frame number:" << f.getNumber() << "\n";        
-  iwriter->writeImage(&f);
+
 }
 
-caf::actor image_writer_factory::spawn(caf::actor_system * sys)
+caf::actor image_writer_factory::spawn()
 {
-  auto act = sys->spawn<image_writer_bhvr>();
+  auto act = system->spawn<image_writer_bhvr>();
   return caf::actor_cast<caf::actor>(act);
 }

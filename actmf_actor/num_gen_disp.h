@@ -20,6 +20,7 @@
 #ifndef ACTMF_NUM_GEN_DISP_H
 #define ACTMF_NUM_GEN_DISP_H
 
+#include <chrono>
 #include "actmf_interface/abstract_service.h"
 
 namespace actmf {
@@ -29,14 +30,17 @@ namespace actmf {
   
   class num_gen_disp_bhvr : public
   caf::composed_behavior<caf::composable_behavior<num_gen_disp_actor>, abstract_service_bhvr> {
+  private:
+    int num;
   public:
     caf::result<int> operator()(bool) override; 
   };
  
   class num_gen_disp_factory : abstract_service_factory
   {
-  public:
-   virtual caf::actor spawn(caf::actor_system * sys);
+  protected:
+    virtual void init(caf::actor);
+    virtual caf::actor spawn();
   };
 }
 

@@ -25,19 +25,19 @@
 namespace actmf {
   
   using addition_actor = 
-  caf::typed_actor<caf::replies_to<string, int, int>::with<int>>;
+  caf::typed_actor<caf::replies_to<std::string, int, int>::with<int>>;
   
   class addition_bhvr : public
   caf::composed_behavior<caf::composable_behavior<addition_actor>, abstract_service_bhvr> {
   
   public:
-    caf::result<int> operator()(caf::param<string>, int, int) override;  
+    caf::result<int> operator()(caf::param<std::string>, int, int) override;  
   };
   
   class addition_factory : abstract_service_factory
   {
-  public:
-   virtual caf::actor spawn(caf::actor_system * sys);
+  protected:
+   virtual caf::actor spawn();
   };
  
 }

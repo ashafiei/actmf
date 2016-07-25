@@ -23,7 +23,7 @@ using namespace actmf;
 
 addition_factory Factory;
 
-caf::result< int > addition_bhvr::operator()(caf::param< string > app, int x, int y)
+caf::result< int > addition_bhvr::operator()(caf::param< std::string > app, int x, int y)
 {
   int res = x + y;
   for(service * serv : next_service[app.get()])
@@ -31,9 +31,8 @@ caf::result< int > addition_bhvr::operator()(caf::param< string > app, int x, in
   return res;
 }
 
-
-caf::actor addition_factory::spawn(caf::actor_system * sys)
+caf::actor addition_factory::spawn()
 {
-  auto act = sys->spawn<addition_bhvr>();
+  auto act = system->spawn<addition_bhvr>();
   return caf::actor_cast<caf::actor>(act);
 }

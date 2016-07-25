@@ -23,26 +23,23 @@ using namespace actmf;
 
 num_gen_disp_factory Factory;
 
-caf::result< int > num_gen_disp_bhvr::operator()(bool)
+caf::result< int > num_gen_disp_bhvr::operator()(bool b)
 {
-  int a;
-  //TODO for loop with delay of 3 seconds.
-  while(true) {
-    a = rand() % 10;
-    std::cout << "random number= " << a << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(3));
-  }
-  return a;
+  num = rand() % 10;
+  std::cout << "random number = " << num << std::endl;
+  // TODO how to do delayed_send?
+  //std::this_thread::sleep_for(std::chrono::seconds(3));
+  //caf::anon_send(self, true);
+  return num;
 }
-    //TODO caf::after(std::chrono::seconds(3)) >> [=] {
-    //  this->send(this, true);
-    //}
 
+void num_gen_disp_factory::init(caf::actor act) {
+  caf::anon_send(act, true);
+}
 
-
-caf::actor num_gen_disp_factory::spawn(caf::actor_system * sys)
+caf::actor num_gen_disp_factory::spawn()
 {
-  auto act = sys->spawn<num_gen_disp_bhvr>();
+  auto act = system->spawn<num_gen_disp_bhvr>();
   return caf::actor_cast<caf::actor>(act);
 }
 

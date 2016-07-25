@@ -46,6 +46,7 @@ void module_loader::load_application(const std::__cxx11::string& app)
   for (auto n : nodes) {
     std::vector<std::string> connections = app_parser.get_connections(n);
     for (auto c : connections) {
+      
       caf::anon_send(registry[n]->get_actor(), 
 		     app_name , registry[c]->get_address(), 
 		     registry[c]->get_port()
@@ -77,16 +78,19 @@ service * module_loader::load_module(const std::__cxx11::string& module)
     std::cout << dlerror() << std::endl;
     return nullptr;
   }
-  auto act = serv_factory->spawn(system);
+
+  serv_factory->spawn_publish(serv->get_port());
   
-  serv->set_actor(act);
+  auto eact = system->middleman().remote_actor(serv->get_address(), serv->get_port());
+  if (!eact)
+    throw std::runtime_error(system->render(eact.error()));
+  
+  serv->set_actor(std::move(*eact));
   
   if (!serv->has_actor()) {
     std::cout << "abstract_actor is not created" << std::endl;
     return nullptr;
-  }
-  
-  system->middleman().publish(serv->get_actor(), serv->get_port());
+}
   
   registry[module] = serv;
   

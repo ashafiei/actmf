@@ -25,18 +25,18 @@
 namespace actmf {
   
   using num_disp_actor = 
-  caf::typed_actor<caf::replies_to<string, int>::with<int>>;
+  caf::typed_actor<caf::replies_to<std::string, int>::with<int>>;
   
   class num_disp_bhvr : public
   caf::composed_behavior<caf::composable_behavior<num_disp_actor>, abstract_service_bhvr> {
   public:
-    caf::result<int> operator()(caf::param<string>, int) override; 
+    caf::result<int> operator()(caf::param<std::string>, int) override; 
   };
   
   class num_disp_factory : abstract_service_factory
   {
-  public:
-   virtual caf::actor spawn(caf::actor_system * sys);
+  protected:
+   virtual caf::actor spawn();
   };
  
 }

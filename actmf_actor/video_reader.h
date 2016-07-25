@@ -21,27 +21,28 @@
 #define ACTMF_VIDEO_READER_H
 
 #include "actmf_interface/abstract_service.h"
-#include "tmmp/all.h"
+#include "opencv2/opencv.hpp"
 
 namespace actmf {
   
   using video_reader_actor = 
-  caf::typed_actor<caf::replies_to<string>::with<int>>;
+  caf::typed_actor<caf::replies_to<std::string>::with<int>>;
   
   class video_reader_bhvr : public
   caf::composed_behavior<caf::composable_behavior<video_reader_actor>, abstract_service_bhvr> {
   private:
-    VideoReader * vreader;
-    RawFrame data;
+    cv::Mat frame;
+    opencv_mat image;
+    cv::VideoCapture * cap;
   public:
     video_reader_bhvr();
-    caf::result<int> operator()(caf::param<string>) override; 
+    caf::result<int> operator()(caf::param<std::string>) override; 
   };
   
   class video_reader_factory : abstract_service_factory
   {
-  public:
-   virtual caf::actor spawn(caf::actor_system * sys);
+  protected:
+   virtual caf::actor spawn();
   };
  
 }

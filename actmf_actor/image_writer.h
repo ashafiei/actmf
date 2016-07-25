@@ -21,26 +21,25 @@
 #define ACTMF_IMAGE_WRITER_H
 
 #include "actmf_interface/abstract_service.h"
-#include "tmmp/all.h"
+#include "opencv2/opencv.hpp"
 
 namespace actmf {
   
   using image_writer_actor = 
-  caf::typed_actor<caf::replies_to<string, RawFrame>::with<int>>;
+  caf::typed_actor<caf::replies_to<std::string, opencv_mat>::with<int>>;
   
   class image_writer_bhvr : public
   caf::composed_behavior<caf::composable_behavior<image_writer_actor>, abstract_service_bhvr> {
   private:
-    ImageWriter * iwriter;
   public:
     image_writer_bhvr();
-    caf::result<int> operator()(caf::param<string>, caf::param<RawFrame>) override; 
+    caf::result<int> operator()(caf::param<std::string>, caf::param<opencv_mat>) override; 
   };
   
   class image_writer_factory : abstract_service_factory
   {
-  public:
-   virtual caf::actor spawn(caf::actor_system * sys);
+  protected:
+   virtual caf::actor spawn();
   };
  
 }

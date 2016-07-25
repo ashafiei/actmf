@@ -25,24 +25,15 @@ video_reader_factory Factory;
 
 video_reader_bhvr::video_reader_bhvr()
 {
-  std::cout << "Start Init..." << std::endl;
-  vreader = new VideoReader("/home/sh/Videos/bbb.mp4");
-  std::cout << "Before Init..." << std::endl;
-  vreader->init();
   
 }
 
-caf::result< int > video_reader_bhvr::operator()(caf::param< string > app)
+caf::result< int > video_reader_bhvr::operator()(caf::param< std::string > app)
 {
-  int ret = vreader->readFrame(&data); 
-  if (ret == -1) {
-    //video ended
-    
-  }
   
   for(service * serv : next_service[app.get()]) {
-    caf::anon_send(serv->get_actor(), app.get(), data);
-    caf::aout(servp) << "sending frame number:" << data.getNumber() << "\n";
+    caf::anon_send(serv->get_actor(), app.get(), image);
+    std::cout << "sending frame number:" << image.get_number() << "\n";
   }
 }
 
@@ -53,8 +44,8 @@ caf::result< int > video_reader_bhvr::operator()(caf::param< string > app)
    //  }
    //};
 
-caf::actor video_reader_factory::spawn(caf::actor_system * sys)
+caf::actor video_reader_factory::spawn()
 {
-  auto act = sys->spawn<video_reader_bhvr>();
+  auto act = system->spawn<video_reader_bhvr>();
   return caf::actor_cast<caf::actor>(act);
 }
