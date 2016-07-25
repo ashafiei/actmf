@@ -35,8 +35,8 @@ namespace actmf {
   
   class addition_factory : abstract_service_factory
   {
-  public:
-   virtual caf::actor spawn(caf::actor_system * system);
+  protected:
+   virtual caf::actor spawn();
   };
  
 }

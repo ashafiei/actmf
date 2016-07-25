@@ -31,7 +31,7 @@ num_gen::num_gen(caf::actor_config& cfg): abstract_service(cfg)
 caf::behavior num_gen::awaiting_task()
 {
   return {
-    [=] (std::string app_name, string host, int16_t port) {
+    [=] (std::string app_name, std::string host, int16_t port) {
       insert_service(app_name, host, port);
     },
     [=](std::string app_name) {
@@ -52,7 +52,7 @@ num_gen::~num_gen()
 
 }
 
-caf::actor num_gen_factory::spawn(caf::actor_system * system)
+caf::actor num_gen_factory::spawn()
 {
   return system->spawn<num_gen>();
 }

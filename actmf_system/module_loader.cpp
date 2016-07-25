@@ -76,7 +76,13 @@ service * module_loader::load_module(const std::__cxx11::string& module)
     std::cout << dlerror() << std::endl;
     return nullptr;
   }
-  serv->set_actor(serv_factory->spawn(system));
+  serv_factory->spawn_publish(serv->get_port());
+  
+  auto eact = system->middleman().remote_actor(serv->get_address(), serv->get_port());
+  if (!eact)
+    throw std::runtime_error(system->render(eact.error()));
+  
+  serv->set_actor(std::move(*eact));
   
   if (!serv->has_actor()) {
     std::cout << "abstract_actor is not created" << std::endl;
@@ -84,8 +90,6 @@ service * module_loader::load_module(const std::__cxx11::string& module)
   }
   
   registry[module] = serv;
-  
-  system->middleman().publish(serv->get_actor(), serv->get_port());
   
   return serv;
 }

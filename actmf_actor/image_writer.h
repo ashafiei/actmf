@@ -21,14 +21,12 @@
 #define ACTMF_IMAGE_WRITER_H
 
 #include "actmf_interface/abstract_service.h"
-#include "tmmp/all.h"
 
 namespace actmf {
   
   class image_writer : public abstract_service
   {
   private:
-    ImageWriter * iwriter;
   protected:
     virtual caf::behavior awaiting_task();
   public:
@@ -38,8 +36,8 @@ namespace actmf {
   
   class image_writer_factory : abstract_service_factory
   {
-  public:
-   virtual caf::actor spawn(caf::actor_system * system);
+  protected:
+   virtual caf::actor spawn();
   };
  
 }

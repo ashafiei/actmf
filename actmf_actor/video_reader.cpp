@@ -25,11 +25,9 @@ video_reader_factory Factory;
 
 video_reader::video_reader(caf::actor_config& cfg): abstract_service(cfg)
 {
-  vreader = new VideoReader("/home/sh/Videos/bbb.mp4");
-  //vreader->setVideoFromat(videoFromat);
-  //vreader->setInputFormat(inputFormat);
-  //vreader->setFramerate(framerate);
-  vreader->init();
+  cap = new cv::VideoCapture("/home/sh/Videos/bbb.mp4");
+  if(!cap->isOpened())  // check if we succeeded
+    std::cout << "Cannot open the camera.\n";
 }
 
 caf::behavior video_reader::awaiting_task()
@@ -39,15 +37,12 @@ caf::behavior video_reader::awaiting_task()
        insert_service(app_name, host, port);
      },
      [=](std::string app_name) {
-       
-       int ret = vreader->readFrame(&data); 
-       if (ret == -1) {
-	 //video ended
-       }
+       *cap >> frame; // get a new frame from camera
+       image.set_mat(&frame);
        
        for(service * serv : next_service[app_name]) {
-         this->send(serv->get_actor(), app_name, data);
-	 caf::aout(this) << "sending frame number:" << data.getNumber() << "\n";
+         this->send(serv->get_actor(), app_name, image);
+	 caf::aout(this) << "sending frame number:" << image.get_number() << "\n";
        }
      },
      caf::after(std::chrono::seconds(1)) >> [=] {
@@ -62,7 +57,7 @@ video_reader::~video_reader()
 
 }
 
-caf::actor video_reader_factory::spawn(caf::actor_system * system)
+caf::actor video_reader_factory::spawn()
 {
   return system->spawn<video_reader>();
 }

@@ -25,21 +25,22 @@ image_writer_factory Factory;
 
 image_writer::image_writer(caf::actor_config& cfg): abstract_service(cfg)
 {
-  iwriter = new ImageWriter(1280, 720, AV_PIX_FMT_YUV420P);
-  iwriter->setPath("/home/sh/Videos/");
+
 }
 
 caf::behavior image_writer::awaiting_task()
 {
    return {
-     [=](std::string app_name, RawFrame data) {
-       caf::aout(this) << "writing frame number:" << data.getNumber() << "\n";       
-       iwriter->writeImage(&data);
-       //caf::aout(this) << "data is written\n";       
-       //caf::aout(this) << *(data.data->data[0]) << data.data->width << std::endl;
-       //caf::aout(this) << *(data.buffer[0]) << *(data.buffer[1])
-       //<< *(data.buffer[2]) << *(data.buffer[3]) << *(data.buffer[4])
-       //<< data.height << data.width << std::endl;
+     [=](std::string app_name, opencv_mat mat) {
+       caf::aout(this) << "writing frame number:" << mat.get_number() << "\n";       
+       std::vector<uchar> data = mat.get_data();
+             
+       cv::Mat * frame = mat.get_mat();
+       
+       std::string name = "/home/sh/Videos/frame" + 
+       std::to_string(mat.get_number()) + ".png";
+      
+       cv::imwrite(name, *frame);
      }
   };
 }
@@ -49,7 +50,7 @@ image_writer::~image_writer()
 
 }
 
-caf::actor image_writer_factory::spawn(caf::actor_system * system)
+caf::actor image_writer_factory::spawn()
 {
   return system->spawn<image_writer>();
 }
