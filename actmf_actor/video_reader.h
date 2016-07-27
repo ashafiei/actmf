@@ -26,7 +26,7 @@
 namespace actmf {
   
   using video_reader_actor = 
-  caf::typed_actor<caf::replies_to<std::string>::with<int>>;
+  caf::typed_actor<caf::replies_to<bool>::with<int>>;
   
   class video_reader_bhvr : public
   caf::composed_behavior<caf::composable_behavior<video_reader_actor>, abstract_service_bhvr> {
@@ -36,13 +36,14 @@ namespace actmf {
     cv::VideoCapture * cap;
   public:
     video_reader_bhvr();
-    caf::result<int> operator()(caf::param<std::string>) override; 
+    caf::result<int> operator()(bool) override; 
   };
   
   class video_reader_factory : abstract_service_factory
   {
   protected:
-   virtual caf::actor spawn();
+    virtual void init(caf::actor);
+    virtual caf::actor spawn();
   };
  
 }

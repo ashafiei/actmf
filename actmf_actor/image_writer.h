@@ -32,7 +32,6 @@ namespace actmf {
   caf::composed_behavior<caf::composable_behavior<image_writer_actor>, abstract_service_bhvr> {
   private:
   public:
-    image_writer_bhvr();
     caf::result<int> operator()(caf::param<std::string>, caf::param<opencv_mat>) override; 
   };
   

@@ -25,24 +25,28 @@ video_reader_factory Factory;
 
 video_reader_bhvr::video_reader_bhvr()
 {
-  
+  cap = new cv::VideoCapture("/home/sh/Videos/bbb.mp4");
+  if(!cap->isOpened())  // check if we succeeded
+    std::cout << "Cannot open the camera.\n";
 }
 
-caf::result< int > video_reader_bhvr::operator()(caf::param< std::string > app)
+caf::result< int > video_reader_bhvr::operator()(bool b)
 {
-  
-  for(service * serv : next_service[app.get()]) {
-    caf::anon_send(serv->get_actor(), app.get(), image);
+  *cap >> frame; // get a new frame from camera
+  image.set_mat(&frame);
+  for (auto ns : next_service) {
+    for (service * serv : ns.second) {
+    caf::anon_send(serv->get_actor(), ns.first, image);
     std::cout << "sending frame number:" << image.get_number() << "\n";
+    }
   }
+  self->delayed_anon_send(self, std::chrono::seconds(1), true);
+  return 0;
 }
 
-   //TODO return {
-   //  caf::after(std::chrono::seconds(1)) >> [=] {
-   //    for (auto serv : next_service) 
-   //       this->send(this, serv.first);
-   //  }
-   //};
+void video_reader_factory::init(caf::actor act) {
+  caf::anon_send(act, true);
+}
 
 caf::actor video_reader_factory::spawn()
 {

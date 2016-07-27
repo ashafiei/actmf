@@ -23,14 +23,19 @@ using namespace actmf;
 
 image_writer_factory Factory;
 
-image_writer_bhvr::image_writer_bhvr()
+caf::result< int > image_writer_bhvr::operator()(caf::param< std::string > app, caf::param< opencv_mat > mat)
 {
-
-}
-
-caf::result< int > image_writer_bhvr::operator()(caf::param< std::string > app, caf::param< opencv_mat > frame)
-{
-
+  opencv_mat m = mat.get();
+  std::cout << "writing frame number:" << m.get_number() << "\n";       
+  std::vector<uchar> data = m.get_data();
+            
+  cv::Mat * frame = m.get_mat();
+      
+  std::string name = "/home/sh/Videos/frame" + 
+  std::to_string(m.get_number()) + ".png";
+      
+  cv::imwrite(name, *frame);
+  return 0;
 }
 
 caf::actor image_writer_factory::spawn()
