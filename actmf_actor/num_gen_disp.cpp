@@ -27,9 +27,7 @@ caf::result< int > num_gen_disp_bhvr::operator()(bool b)
 {
   num = rand() % 10;
   std::cout << "random number = " << num << std::endl;
-  // TODO how to do delayed_send?
-  //std::this_thread::sleep_for(std::chrono::seconds(3));
-  //caf::anon_send(self, true);
+  self->delayed_anon_send(self, std::chrono::seconds(3), true);
   return num;
 }
 
@@ -42,4 +40,3 @@ caf::actor num_gen_disp_factory::spawn()
   auto act = system->spawn<num_gen_disp_bhvr>();
   return caf::actor_cast<caf::actor>(act);
 }
-

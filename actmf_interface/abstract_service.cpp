@@ -92,7 +92,6 @@ caf::result< int > abstract_service_bhvr::operator()(caf::param< std::string > a
   serv->set_port(port);
   serv->set_actor(act);
   next_service[app.get()].push_back(serv);
-  std::cout << "actor is added to " << port << std::endl;
   return 0;
 }
 

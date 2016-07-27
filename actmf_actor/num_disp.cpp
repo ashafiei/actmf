@@ -25,7 +25,8 @@ num_disp_factory Factory;
 
 caf::result< int > num_disp_bhvr::operator()(caf::param< std::string > app, int d)
 {
-  std::cout << "n = " << d << std::endl; 
+  std::cout << "n = " << d << std::endl;
+  return 0;
 }
 
 
