@@ -23,30 +23,16 @@ using namespace actmf;
 
 addition_factory Factory;
 
-addition::addition(caf::actor_config& cfg): abstract_service(cfg)
+caf::result< int > addition_bhvr::operator()(caf::param< std::string > app, int x, int y)
 {
-}
-
-caf::behavior addition::awaiting_task()
-{
-   return {
-     [=] (std::string app_name, std::string host, int16_t port) {
-       insert_service(app_name, host, port);
-     },
-     [=](std::string app_name, int x, int y) {
-       int res = x + y;
-       for(service * serv : next_service[app_name])
-         this->send(serv->get_actor(), app_name, res);
-     }
-  };
-}
-
-addition::~addition()
-{
-
+  int res = x + y;
+  for(service * serv : next_service[app.get()])
+    caf::anon_send(serv->get_actor(), app.get(), res);
+  return res;
 }
 
 caf::actor addition_factory::spawn()
 {
-  return system->spawn<addition>();
+  auto act = system->spawn<addition_bhvr>();
+  return caf::actor_cast<caf::actor>(act);
 }

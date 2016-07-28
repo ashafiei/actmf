@@ -81,43 +81,18 @@ opencv_mat::~opencv_mat()
   delete mat;
 }
 
-abstract_service::abstract_service(caf::actor_config& cfg):
-caf::event_based_actor(cfg)
+caf::result< int > abstract_service_bhvr::operator()(caf::param< std::string > app, caf::param< std::string > host, int16_t port)
 {
-
-}
-
-caf::behavior abstract_service::make_behavior()
-{
-  this->become(awaiting_task());
-  return {};
-}
-
-caf::behavior abstract_service::awaiting_direction()
-{
-    return {
-      [=](direct_atom direct, const std::string& host, int16_t port) {
-       
-	this->unbecome();
-      }
-    };
-}
-
-void abstract_service::insert_service(std::string app, std::string host, int16_t port)
-{
-       service * serv = new service;
-       auto eact = this->system().middleman().remote_actor(host, port);
-       if (!eact)
-	 throw std::runtime_error(this->system().render(eact.error()));
-       caf::actor act = std::move(*eact);
-       serv->set_address(host);
-       serv->set_port(port);
-       serv->set_actor(act);
-       next_service[app].push_back(serv);
+  service * serv = new service;
+  auto eact = self->system().middleman().remote_actor(host, port);
+  if (!eact)
+    throw std::runtime_error(self->system().render(eact.error()));
+  caf::actor act = caf::actor_cast<caf::actor>(std::move(*eact));
+  serv->set_address(host);
+  serv->set_port(port);
+  serv->set_actor(act);
+  next_service[app.get()].push_back(serv);
+  return 0;
 }
 
 
-abstract_service::~abstract_service()
-{
-
-}

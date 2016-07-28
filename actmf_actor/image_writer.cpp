@@ -23,34 +23,23 @@ using namespace actmf;
 
 image_writer_factory Factory;
 
-image_writer::image_writer(caf::actor_config& cfg): abstract_service(cfg)
+caf::result< int > image_writer_bhvr::operator()(caf::param< std::string > app, caf::param< opencv_mat > mat)
 {
-
-}
-
-caf::behavior image_writer::awaiting_task()
-{
-   return {
-     [=](std::string app_name, opencv_mat mat) {
-       caf::aout(this) << "writing frame number:" << mat.get_number() << "\n";       
-       std::vector<uchar> data = mat.get_data();
-             
-       cv::Mat * frame = mat.get_mat();
-       
-       std::string name = "/home/sh/Videos/frame" + 
-       std::to_string(mat.get_number()) + ".png";
+  opencv_mat m = mat.get();
+  std::cout << "writing frame number:" << m.get_number() << "\n";       
+  std::vector<uchar> data = m.get_data();
+            
+  cv::Mat * frame = m.get_mat();
       
-       cv::imwrite(name, *frame);
-     }
-  };
-}
-
-image_writer::~image_writer()
-{
-
+  std::string name = "/home/sh/Videos/frame" + 
+  std::to_string(m.get_number()) + ".png";
+      
+  cv::imwrite(name, *frame);
+  return 0;
 }
 
 caf::actor image_writer_factory::spawn()
 {
-  return system->spawn<image_writer>();
+  auto act = system->spawn<image_writer_bhvr>();
+  return caf::actor_cast<caf::actor>(act);
 }

@@ -23,41 +23,33 @@ using namespace actmf;
 
 video_reader_factory Factory;
 
-video_reader::video_reader(caf::actor_config& cfg): abstract_service(cfg)
+video_reader_bhvr::video_reader_bhvr()
 {
   cap = new cv::VideoCapture("/home/sh/Videos/bbb.mp4");
   if(!cap->isOpened())  // check if we succeeded
     std::cout << "Cannot open the camera.\n";
 }
 
-caf::behavior video_reader::awaiting_task()
+caf::result< int > video_reader_bhvr::operator()(bool b)
 {
-   return {
-     [=] (std::string app_name, std::string host, int16_t port) {
-       insert_service(app_name, host, port);
-     },
-     [=](std::string app_name) {
-       *cap >> frame; // get a new frame from camera
-       image.set_mat(&frame);
-       
-       for(service * serv : next_service[app_name]) {
-         this->send(serv->get_actor(), app_name, image);
-	 caf::aout(this) << "sending frame number:" << image.get_number() << "\n";
-       }
-     },
-     caf::after(std::chrono::seconds(1)) >> [=] {
-       for (auto serv : next_service) 
-          this->send(this, serv.first);
-     }
-  };
+  *cap >> frame; // get a new frame from camera
+  image.set_mat(&frame);
+  for (auto ns : next_service) {
+    for (service * serv : ns.second) {
+    caf::anon_send(serv->get_actor(), ns.first, image);
+    std::cout << "sending frame number:" << image.get_number() << "\n";
+    }
+  }
+  self->delayed_anon_send(self, std::chrono::seconds(1), true);
+  return 0;
 }
 
-video_reader::~video_reader()
-{
-
+void video_reader_factory::init(caf::actor act) {
+  caf::anon_send(act, true);
 }
 
 caf::actor video_reader_factory::spawn()
 {
-  return system->spawn<video_reader>();
+  auto act = system->spawn<video_reader_bhvr>();
+  return caf::actor_cast<caf::actor>(act);
 }

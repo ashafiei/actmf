@@ -32,7 +32,7 @@ namespace actmf {
   using add_atom = caf::atom_constant<caf::atom("add")>;
   using disp_num_atom = caf::atom_constant<caf::atom("dis_num")>;
   using gen_disp_atom = caf::atom_constant<caf::atom("gen_disp")>;
-  
+ 
   using register_atom = caf::atom_constant<caf::atom("register")>;
   using create_app_atom = caf::atom_constant<caf::atom("create_app")>;
   
@@ -111,18 +111,15 @@ inspect(Inspector& f, opencv_mat& x) {
     int16_t get_port() { return port; }
   };
   
-  class abstract_service : public caf::event_based_actor
-  {
+  using abstract_service_actor = 
+  caf::typed_actor<caf::replies_to<std::string, std::string, int16_t>::with<int>>;
+
+  class abstract_service_bhvr : 
+  public caf::composable_behavior<abstract_service_actor> {
   protected:
-    virtual caf::behavior awaiting_task() = 0;
-    caf::behavior awaiting_direction();
-    void insert_service(std::string app, std::string host, int16_t port);
     std::map<std::string, std::vector<service *>> next_service;
   public:
-    abstract_service(caf::actor_config& cfg);
-    caf::behavior make_behavior() override; 
-    ~abstract_service();
-    
+    caf::result<int> operator()(caf::param<std::string>, caf::param<std::string>, int16_t) override; 
   };
   
   class abstract_service_factory {
@@ -130,6 +127,7 @@ inspect(Inspector& f, opencv_mat& x) {
     caf::actor_system_config cfg;
     caf::actor_system * system;
     virtual caf::actor spawn() = 0;
+    virtual void init(caf::actor act) {}
   public:
     abstract_service_factory() {
         cfg.load<caf::io::middleman>();
@@ -137,8 +135,10 @@ inspect(Inspector& f, opencv_mat& x) {
 	system = new caf::actor_system(this->cfg);
     }
     void spawn_publish(int port) { 
-      auto act = spawn(); 
-      system->middleman().publish(act, port); }
+      auto act = spawn();
+      system->middleman().publish(act, port);
+      init(act);
+    }
   };
 
 }

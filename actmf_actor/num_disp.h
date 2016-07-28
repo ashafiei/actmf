@@ -24,13 +24,13 @@
 
 namespace actmf {
   
-  class num_disp : public abstract_service
-  {
-  protected:
-    virtual caf::behavior awaiting_task();
+  using num_disp_actor = 
+  caf::typed_actor<caf::replies_to<std::string, int>::with<int>>;
+  
+  class num_disp_bhvr : public
+  caf::composed_behavior<caf::composable_behavior<num_disp_actor>, abstract_service_bhvr> {
   public:
-    num_disp(caf::actor_config& cfg);
-    ~num_disp();
+    caf::result<int> operator()(caf::param<std::string>, int) override; 
   };
   
   class num_disp_factory : abstract_service_factory

@@ -2,6 +2,7 @@ project (actmf_actor)
 
 file(GLOB ACTORS *.cpp)
 
+
 foreach(file ${ACTORS})
   get_filename_component(actor ${file} NAME_WE)
   add_library(${actor} SHARED ../actmf_interface/abstract_service.cpp ${actor}.cpp)

@@ -24,13 +24,14 @@
 
 namespace actmf {
   
-  class addition : public abstract_service
-  {
-  protected:
-    virtual caf::behavior awaiting_task();
+  using addition_actor = 
+  caf::typed_actor<caf::replies_to<std::string, int, int>::with<int>>;
+  
+  class addition_bhvr : public
+  caf::composed_behavior<caf::composable_behavior<addition_actor>, abstract_service_bhvr> {
+  
   public:
-    addition(caf::actor_config& cfg);
-    ~addition();
+    caf::result<int> operator()(caf::param<std::string>, int, int) override;  
   };
   
   class addition_factory : abstract_service_factory

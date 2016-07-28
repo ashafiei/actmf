@@ -23,31 +23,20 @@ using namespace actmf;
 
 num_gen_disp_factory Factory;
 
-num_gen_disp::num_gen_disp(caf::actor_config& cfg): abstract_service(cfg)
+caf::result< int > num_gen_disp_bhvr::operator()(bool b)
 {
-
+  num = rand() % 10;
+  std::cout << "random number = " << num << std::endl;
+  self->delayed_anon_send(self, std::chrono::seconds(3), true);
+  return num;
 }
 
-caf::behavior num_gen_disp::awaiting_task()
-{
-  return {
-    [=](bool) {
-      int a = rand() % 10;
-      caf::aout(this) << "random number= " << a << std::endl;
-    },
-    caf::after(std::chrono::seconds(3)) >> [=] {
-      this->send(this, true);
-    }
-  };
-}
-
-num_gen_disp::~num_gen_disp()
-{
-
+void num_gen_disp_factory::init(caf::actor act) {
+  caf::anon_send(act, true);
 }
 
 caf::actor num_gen_disp_factory::spawn()
 {
-  return system->spawn<num_gen_disp>();
+  auto act = system->spawn<num_gen_disp_bhvr>();
+  return caf::actor_cast<caf::actor>(act);
 }
-
