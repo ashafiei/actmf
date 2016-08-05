@@ -30,6 +30,10 @@ Before compilation make sure that actor_framework library is installed:
 
 	https://github.com/actor-framework/actor-framework
 
+Other pre-requirements include:
+
+	libopencv-dev
+
 Development envirement
 ======================
 Actor Multimedia Framework is configured to be developed under KDevelop IDE.
@@ -65,49 +69,38 @@ Here is an example:
 
 namespace actmf {
   
-  class addition : public abstract_service
-  {
-  protected:
-    virtual caf::behavior awaiting_task();
+  using addition_actor = 
+  caf::typed_actor<caf::replies_to<std::string, int, int>::with<int>>;
+  
+  class addition_bhvr : public
+  caf::composed_behavior<caf::composable_behavior<addition_actor>, abstract_service_bhvr> {
+  
   public:
-    addition(caf::actor_config& cfg);
-    ~addition();
+    caf::result<int> operator()(caf::param<std::string>, int, int) override;  
   };
   
   class addition_factory : abstract_service_factory
   {
-  public:
-   virtual caf::actor spawn(caf::actor_system* system);
+  protected:
+   virtual caf::actor spawn();
   };
- 
 }
+
+using namespace actmf;
 
 addition_factory Factory;
 
-addition::addition(caf::actor_config& cfg): abstract_service(cfg)
+caf::result< int > addition_bhvr::operator()(caf::param< std::string > app, int x, int y)
 {
-
+  int res = x + y;
+  for(service * serv : next_service[app.get()])
+    caf::anon_send(serv->get_actor(), app.get(), res);
+  return res;
 }
 
-caf::behavior addition::awaiting_task()
+caf::actor addition_factory::spawn()
 {
-   return {
-      [=](int app_id, int x, int y) {
-        int res = x + y;
-        for(auto act : next_service[app_id])
-          this->send(act, app_id, res);
-      }
-  };
+  auto act = system->spawn<addition_bhvr>();
+  return caf::actor_cast<caf::actor>(act);
 }
-
-addition::~addition()
-{
-
-}
-
-caf::actor addition_factory::spawn(caf::actor_system* system)
-{
-  return system->spawn<addition>();
-}
-
 ```
