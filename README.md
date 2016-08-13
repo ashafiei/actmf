@@ -61,7 +61,7 @@ The configuration file is passed to the application.
 Actor development manual
 =======================
 
-Actor developers must implement new actors (components of application) in ```actmf_actor``` folder. An actor inherits from the actmf::abstract_service class. Each actor must define ```addition_actor::awaiting_task``` as the initial behaviour of the actor. A factory is needed for spawning the actor.
+Actor developers must implement new actors (components of application) in ```actmf_actor``` folder. An actor inherits from the actmf::abstract_service_bhvr class. Each actor must define the operators according to the types it replies to. A factory is needed for spawning the actor.
 
 Here is an example:
 
