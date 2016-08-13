@@ -21,6 +21,16 @@
 
 using namespace actmf;
 
+frame::frame()
+{
+  number = 0;
+}
+
+frame::frame(const frame& x)
+{
+  number = x.number;
+}
+
 cv::Mat* opencv_mat::operator->()
 {
   return mat;
@@ -31,15 +41,13 @@ cv::Mat* opencv_mat::get_mat()
   return mat;
 }
 
-opencv_mat::opencv_mat()
+opencv_mat::opencv_mat():frame()
 {
-  number = 0;
 }
 
-opencv_mat::opencv_mat(const opencv_mat& x)
+opencv_mat::opencv_mat(const opencv_mat& x):frame(x)
 {
   mat = new cv::Mat(*(x.mat));
-  number = x.number;
 }
 
 void opencv_mat::set_mat(cv::Mat * x)
@@ -56,29 +64,43 @@ std::vector< uchar >& opencv_mat::get_data()
   return data;
 }
 
-void opencv_mat::set_data(std::vector< uchar > data, int rows, int cols, int type, int number)
+void opencv_mat::set_data(std::vector< uchar > data, int rows, int cols, int type)
 {
   mat = new cv::Mat(rows, cols, type);
   
   for (long int i=0; i< rows * cols * 3; i++) {
     mat->data[i] = data[i];
   }
-  this->number = number;
-}
-
-int opencv_mat::get_number()
-{
-  return number;
-}
-
-void opencv_mat::set_number(int number)
-{
-  this->number = number;
 }
 
 opencv_mat::~opencv_mat()
 {
   delete mat;
+}
+
+cv::Rect* opencv_rect::operator->()
+{
+  return rect;
+}
+
+opencv_rect::opencv_rect():frame()
+{
+  rect = new cv::Rect();
+}
+
+opencv_rect::opencv_rect(const opencv_rect& x):frame(x)
+{
+  rect = new cv::Rect(*(x.rect));
+}
+
+void opencv_rect::set_data(int x, int y, int width, int height)
+{
+  rect->x = x; rect->y = y; rect->width = width; rect->height = height;
+}
+
+opencv_rect::opencv_rect(const cv::Rect& r)
+{
+  rect->x = r.x; rect->y = r.y; rect->width = r.width; rect->height = r.height;
 }
 
 caf::result< int > abstract_service_bhvr::operator()(caf::param< std::string > app, caf::param< std::string > host, int16_t port)

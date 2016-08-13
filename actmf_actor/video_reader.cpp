@@ -25,7 +25,7 @@ video_reader_factory Factory;
 
 video_reader_bhvr::video_reader_bhvr()
 {
-  cap = new cv::VideoCapture("/home/sh/Videos/bbb.mp4");
+  cap = new cv::VideoCapture("/home/sh/Videos/people.mp4");
   if(!cap->isOpened())  // check if we succeeded
     std::cout << "Cannot open the camera.\n";
 }
@@ -37,7 +37,7 @@ caf::result< int > video_reader_bhvr::operator()(bool b)
   for (auto ns : next_service) {
     for (service * serv : ns.second) {
     caf::anon_send(serv->get_actor(), ns.first, image);
-    std::cout << "sending frame number:" << image.get_number() << "\n";
+    caf::aout(self) << "sending frame number:" << image.number << "\n";
     }
   }
   self->delayed_anon_send(self, std::chrono::seconds(1), true);

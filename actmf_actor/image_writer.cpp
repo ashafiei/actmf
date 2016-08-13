@@ -26,13 +26,13 @@ image_writer_factory Factory;
 caf::result< int > image_writer_bhvr::operator()(caf::param< std::string > app, caf::param< opencv_mat > mat)
 {
   opencv_mat m = mat.get();
-  std::cout << "writing frame number:" << m.get_number() << "\n";       
+  std::cout << "writing frame number:" << m.number << "\n";       
   std::vector<uchar> data = m.get_data();
             
   cv::Mat * frame = m.get_mat();
       
   std::string name = "/home/sh/Videos/frame" + 
-  std::to_string(m.get_number()) + ".png";
+  std::to_string(m.number) + ".png";
       
   cv::imwrite(name, *frame);
   return 0;

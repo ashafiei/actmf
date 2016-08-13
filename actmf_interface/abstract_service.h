@@ -35,10 +35,16 @@ namespace actmf {
  
   using register_atom = caf::atom_constant<caf::atom("register")>;
   using create_app_atom = caf::atom_constant<caf::atom("create_app")>;
-  
-  class opencv_mat {
-private:
+
+class frame {
+public:
   int number;
+  frame();
+  frame(const frame &x);
+};
+
+class opencv_mat : public frame {
+private:
   std::vector<uchar> data;
   cv::Mat * mat;
 public:
@@ -52,10 +58,7 @@ public:
   void set_mat(cv::Mat * x);
   
   std::vector<uchar> & get_data();
-  void set_data(std::vector<uchar> data, int rows, int cols, int type, int number);
-  
-  int get_number();
-  void set_number(int number);
+  void set_data(std::vector<uchar> data, int rows, int cols, int type);
   
   explicit operator bool() const {
     return mat != nullptr;
@@ -65,31 +68,65 @@ public:
 
 };
 
+class opencv_rect : public frame {
+
+private:
+  cv::Rect* rect;
+public:
+  cv::Rect* operator->();
+  opencv_rect();
+  opencv_rect(const opencv_rect& x);
+  opencv_rect(const cv::Rect& r);
+  void set_data(int x, int y, int width, int height);
+};
+
 template <class Inspector>
 typename std::enable_if<Inspector::is_saving::value,
                         typename Inspector::result_type>::type
-inspect(Inspector& f, opencv_mat& x) {
-  return f(caf::meta::type_name("opencv_mat"), x->rows,
-	   x->cols, x->type(),
-	   x.get_number(), x.get_data()
+inspect(Inspector& f, opencv_mat& mat) {
+  return f(caf::meta::type_name("opencv_mat"), mat->rows,
+	   mat->cols, mat->type(),
+	   mat.number, mat.get_data()
   );
 }
 
 template <class Inspector>
 typename std::enable_if<Inspector::is_loading::value,
                         typename Inspector::result_type>::type
-inspect(Inspector& f, opencv_mat& x) {
-  int rows, cols, type, number;
+inspect(Inspector& f, opencv_mat& mat) {
+  int rows, cols, type;
   std::vector<uchar> data;
   // write back to x at scope exit
   auto g = caf::detail::make_scope_guard([&] {
-    x.set_data(data, rows, cols, type, number);
+    mat.set_data(data, rows, cols, type);
   });
   return f(caf::meta::type_name("opencv_mat"), rows, cols, type,
-    number, data
+    mat.number, data
   );
 }
-  
+
+template <class Inspector>
+typename std::enable_if<Inspector::is_saving::value,
+                        typename Inspector::result_type>::type
+inspect(Inspector& f, opencv_rect& rect) {
+  return f(caf::meta::type_name("opencv_rect"), rect->x,
+	   rect->y, rect->width, rect->height, rect.number);
+}
+
+template <class Inspector>
+typename std::enable_if<Inspector::is_loading::value,
+                        typename Inspector::result_type>::type
+inspect(Inspector& f, opencv_rect& rect) {
+  int x, y, width, height;
+  // write back to x at scope exit
+  auto g = caf::detail::make_scope_guard([&] {
+    rect.set_data(x, y, width, height);
+  });
+  return f(caf::meta::type_name("opencv_rect"), x, y, width, height, rect.number);
+}
+
+ 
+ 
   class service {
   private:
     caf::actor * act;
@@ -132,6 +169,8 @@ inspect(Inspector& f, opencv_mat& x) {
     abstract_service_factory() {
         cfg.load<caf::io::middleman>();
 	cfg.add_message_type<opencv_mat>("opencv_mat");
+	cfg.add_message_type<opencv_rect>("opencv_rect");
+	cfg.add_message_type<std::vector<opencv_rect>>("vector<opencv_rect>");
 	system = new caf::actor_system(this->cfg);
     }
     void spawn_publish(int port) { 

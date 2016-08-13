@@ -17,22 +17,25 @@
  * 
  */
 
-#include "num_disp.h"
+#include "rect_disp.h"
 
 using namespace actmf;
 
-num_disp_factory Factory;
+rect_disp_factory Factory;
 
-caf::result< int > num_disp_bhvr::operator()(caf::param< std::string > app, int d)
+caf::result< int > rect_disp_bhvr::operator()(caf::param< std::string > app, caf::param<std::vector<opencv_rect>> rects)
 {
-  caf::aout(self) << "n = " << d << std::endl;
+  std::vector<opencv_rect> vr = rects.get();
+  for (opencv_rect r : vr) {
+    caf::aout(self) << "frame " << r.number << ":(" << r->x << "," << r->y << "," 
+    << r->width << "," << r->height << ")\n";
+  }
+  caf::aout(self) << "\n";
   return 0;
 }
 
-
-caf::actor num_disp_factory::spawn()
+caf::actor rect_disp_factory::spawn()
 {
-  auto act = system->spawn<num_disp_bhvr>();
+  auto act = system->spawn<rect_disp_bhvr>();
   return caf::actor_cast<caf::actor>(act);
 }
-

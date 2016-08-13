@@ -17,22 +17,28 @@
  * 
  */
 
-#include "num_disp.h"
+#ifndef ACTMF_RECT_DISP_H
+#define ACTMF_RECT_DISP_H
 
-using namespace actmf;
+#include "actmf_interface/abstract_service.h"
 
-num_disp_factory Factory;
-
-caf::result< int > num_disp_bhvr::operator()(caf::param< std::string > app, int d)
-{
-  caf::aout(self) << "n = " << d << std::endl;
-  return 0;
+namespace actmf {
+  
+  using rect_disp_actor = 
+  caf::typed_actor<caf::replies_to<std::string, std::vector<opencv_rect>>::with<int>>;
+  
+  class rect_disp_bhvr : public
+  caf::composed_behavior<caf::composable_behavior<rect_disp_actor>, abstract_service_bhvr> {
+  public:
+    caf::result<int> operator()(caf::param<std::string>, caf::param<std::vector<opencv_rect>>) override; 
+  };
+  
+  class rect_disp_factory : abstract_service_factory
+  {
+  protected:
+   virtual caf::actor spawn();
+  };
+ 
 }
 
-
-caf::actor num_disp_factory::spawn()
-{
-  auto act = system->spawn<num_disp_bhvr>();
-  return caf::actor_cast<caf::actor>(act);
-}
-
+#endif // ACTMF_RECT_DISP_H
