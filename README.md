@@ -43,7 +43,7 @@ Actor Multimedia Framework is configured to be developed under KDevelop IDE.
 Application development manual
 ===========
 
-To create an application we need to create components, connect them together and sent them to the environment actor. The application graph is constructed in a configuration file.
+To create an application we need to create components, connect them together and send them to the environment actor. The application graph is constructed in a configuration file.
 
 Here is an example with three components, a number generator, an addition filter, and a number display component:
 
