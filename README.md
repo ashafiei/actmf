@@ -28,7 +28,7 @@ Installation
 ```
 Before compilation make sure that actor_framework library is installed:
 
-	https://github.com/actor-framework/actor-framework
+	https://github.com/actor-framework/actor-framework/releases/tag/0.15.0
 
 Other pre-requirements include:
 
