@@ -43,7 +43,7 @@ namespace actmf {
   class haardetect_factory : abstract_service_factory
   {
   protected:
- virtual caf::actor remote_spawn(caf::expected<caf::node_id> node,
+  virtual caf::actor remote_spawn(caf::expected<caf::node_id> node,
 					  caf::message args, 
 					  caf::duration tout);
   };
