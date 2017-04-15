@@ -48,7 +48,9 @@ void video_reader_factory::init(caf::actor act) {
   caf::anon_send(act, true);
 }
 
-caf::actor video_reader_factory::spawn()
+caf::actor video_reader_factory::remote_spawn(caf::expected<caf::node_id> node,
+					  caf::message args, 
+					  caf::duration tout)
 {
   auto act = system->spawn<video_reader_bhvr>();
   return caf::actor_cast<caf::actor>(act);

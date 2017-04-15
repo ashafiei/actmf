@@ -38,7 +38,9 @@ caf::result< int > image_writer_bhvr::operator()(caf::param< std::string > app, 
   return 0;
 }
 
-caf::actor image_writer_factory::spawn()
+caf::actor image_writer_factory::remote_spawn(caf::expected<caf::node_id> node,
+					  caf::message args, 
+					  caf::duration tout)
 {
   auto act = system->spawn<image_writer_bhvr>();
   return caf::actor_cast<caf::actor>(act);

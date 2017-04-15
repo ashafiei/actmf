@@ -41,7 +41,9 @@ void num_gen_factory::init(caf::actor act) {
   caf::anon_send(act, true);
 }
 
-caf::actor num_gen_factory::spawn()
+caf::actor num_gen_factory::remote_spawn(caf::expected<caf::node_id> node,
+					  caf::message args, 
+					  caf::duration tout)
 {
   auto act = system->spawn<num_disp_bhvr>();
   return caf::actor_cast<caf::actor>(act);

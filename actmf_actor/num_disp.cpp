@@ -30,7 +30,9 @@ caf::result< int > num_disp_bhvr::operator()(caf::param< std::string > app, int 
 }
 
 
-caf::actor num_disp_factory::spawn()
+caf::actor num_disp_factory::remote_spawn(caf::expected<caf::node_id> node,
+					  caf::message args, 
+					  caf::duration tout)
 {
   auto act = system->spawn<num_disp_bhvr>();
   return caf::actor_cast<caf::actor>(act);

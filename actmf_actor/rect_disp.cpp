@@ -34,8 +34,12 @@ caf::result< int > rect_disp_bhvr::operator()(caf::param< std::string > app, caf
   return 0;
 }
 
-caf::actor rect_disp_factory::spawn()
+caf::actor rect_disp_factory::remote_spawn(caf::expected<caf::node_id> node,
+					  caf::message args, 
+					  caf::duration tout)
 {
-  auto act = system->spawn<rect_disp_bhvr>();
+  auto type = "rect_disp_actor";
+  auto act = system->remote_spawn<rect_disp_bhvr>(*node, type,
+                                                   args, tout);
   return caf::actor_cast<caf::actor>(act);
 }

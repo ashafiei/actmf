@@ -51,8 +51,11 @@ caf::result< int > haardetect_bhvr::operator()(caf::param<std::string> app, caf:
   return 0;
 }
 
-caf::actor haardetect_factory::spawn()
+caf::actor haardetect_factory::remote_spawn(caf::expected<caf::node_id> node,
+					  caf::message args, 
+					  caf::duration tout)
 {
-  auto act = system->spawn<haardetect_bhvr>();
+  auto type = "haardetect_actor";
+  auto act = system->middleman().remote_spawn<haardetect_bhvr>(node.value(), type, args, tout);
   return caf::actor_cast<caf::actor>(act);
 }

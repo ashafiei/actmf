@@ -163,7 +163,7 @@ inspect(Inspector& f, opencv_rect& rect) {
   protected:
     caf::actor_system_config cfg;
     caf::actor_system * system;
-    virtual caf::actor spawn() = 0;
+    virtual caf::actor remote_spawn(caf::expected<caf::node_id> node, caf::message args, caf::duration tout) = 0;
     virtual void init(caf::actor act) {}
   public:
     abstract_service_factory() {
@@ -173,8 +173,16 @@ inspect(Inspector& f, opencv_rect& rect) {
 	cfg.add_message_type<std::vector<opencv_rect>>("vector<opencv_rect>");
 	system = new caf::actor_system(this->cfg);
     }
-    void spawn_publish(int port) { 
-      auto act = spawn();
+    void spawn(std::string host, int port) {
+      auto node = system->middleman().connect(host, port);
+      if (!node) {
+	std::cerr << "*** connect failed: "
+         << system->render(node.error()) << std::endl;
+	return;
+      }
+      auto args = caf::make_message(); // arguments to construct the actor
+      auto tout = std::chrono::seconds(30); // wait no longer than 30s
+      auto act = remote_spawn(node, args, tout);
       system->middleman().publish(act, port);
       init(act);
     }

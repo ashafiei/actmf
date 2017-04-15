@@ -43,7 +43,9 @@ namespace actmf {
   {
   protected:
     virtual void init(caf::actor);
-    virtual caf::actor spawn();
+ virtual caf::actor remote_spawn(caf::expected<caf::node_id> node,
+					  caf::message args, 
+					  caf::duration tout);
   };
  
 }

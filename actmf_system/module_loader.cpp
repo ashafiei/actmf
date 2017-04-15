@@ -65,8 +65,12 @@ service * module_loader::load_module(const std::__cxx11::string& module)
   
   serv->set_address("127.0.0.1");
   serv->set_port(cur_port++);
-  
   std::string module_file = "../lib/lib"+module+".so";
+  
+#ifdef __APPLE__
+  module_file = "../lib/lib"+module+".dylib";
+#endif
+
   void *handl = dlopen(module_file.c_str(), RTLD_NOW);
   if(handl == nullptr){
     std::cout << dlerror() << std::endl;
@@ -79,7 +83,7 @@ service * module_loader::load_module(const std::__cxx11::string& module)
     return nullptr;
   }
 
-  serv_factory->spawn_publish(serv->get_port());
+  serv_factory->spawn("127.0.0.1", serv->get_port());
   
   auto eact = system->middleman().remote_actor(serv->get_address(), serv->get_port());
   if (!eact)
