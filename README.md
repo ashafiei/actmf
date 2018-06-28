@@ -1,63 +1,52 @@
-Actor Multimedia Framework (actmf)
-===============================
+actmf
+=====
 
-Actor Multimedia Framework (actmf) is an actor-based multimedia framework to build multimedia applications. An application consists of a number of components which together form a graph structure. Each component runs as an actor. There is an actor called environment which is responsible for creating components of an application as actors dynamically.
+Actmf is an actor-based multimedia framework to build multimedia applications. An application consists of a number of components which together form a graph structure. Each component runs as an actor. There is an actor called environment which is responsible for creating components of an application as actors dynamically.
 
+Pre-requirements
+================
 
-Folder structure
-===================
+C++ Actor Framework:
+```
+https://github.com/actor-framework/actor-framework/releases/tag/0.15.0
+```
 
-Here is how the project is organized.
+OpenCV:
+```
+libopencv-dev
+```
 
-	actmf_actor
-	actmf_application
-	actmf_interface
-	actmf_system
-	CMakeLists.txt
-	LICENCE
-	README.md
-	actmf.kdev4
-
-Installation
+Build
 ===============
 ```bash
   #!/bin/bash
   cd build
-  ../cmake
+  cmake ..
   make
 ```
-Before compilation make sure that actor_framework library is installed:
 
-	https://github.com/actor-framework/actor-framework/releases/tag/0.15.0
-
-Other pre-requirements include:
-
-	libopencv-dev
 
 Application development
 ===========
 
-To create an application we need to create components, connect them together and send them to the environment actor. The application graph is constructed in a configuration file.
+To create an application components need to be created and connected to each other.
 
-Here is an example with three components, a number generator, an addition filter, and a number display component:
+Here is an example with three components, a number generator, an addition filter, and a number display component. The application graph is constructed in a configuration file.
 
-	application = 'addition'
+```
+application = 'addition'
 
-	g = 'num_gen'
-	a = 'addition'
-	d = 'num_disp'
+g = 'num_gen'
+a = 'addition'
+d = 'num_disp'
 
-	connections = [(g, a), (a, d)]
-	
-The configuration file is passed to the application.
-
+connections = [(g, a), (a, d)]
+```
 
 Actor development
 =======================
 
-Actor developers must implement new actors (components of application) in ```actmf_actor``` folder. An actor inherits from the actmf::abstract_service_bhvr class. Each actor must define the operators according to the types it replies to. A factory is needed for spawning the actor.
-
-Here is an example:
+New actors (components of application) should be developed in ```actmf_actor``` folder. An actor inherits from the actmf::abstract_service_bhvr class. Each actor must define the operators according to the types it replies to. A factory is needed for spawning the actor.
 
 ```c++
 
