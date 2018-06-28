@@ -34,7 +34,7 @@ Other pre-requirements include:
 
 	libopencv-dev
 
-Application development manual
+Application development
 ===========
 
 To create an application we need to create components, connect them together and send them to the environment actor. The application graph is constructed in a configuration file.
@@ -52,7 +52,7 @@ Here is an example with three components, a number generator, an addition filter
 The configuration file is passed to the application.
 
 
-Actor development manual
+Actor development
 =======================
 
 Actor developers must implement new actors (components of application) in ```actmf_actor``` folder. An actor inherits from the actmf::abstract_service_bhvr class. Each actor must define the operators according to the types it replies to. A factory is needed for spawning the actor.
