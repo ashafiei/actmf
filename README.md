@@ -34,12 +34,6 @@ Other pre-requirements include:
 
 	libopencv-dev
 
-Development envirement
-======================
-Actor Multimedia Framework is configured to be developed under KDevelop IDE.
-	
-	kdevelop -p actmf.kdev4
-
 Application development manual
 ===========
 
