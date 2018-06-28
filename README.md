@@ -1,4 +1,4 @@
-actmf
+Actmf
 =====
 
 Actmf is an actor-based multimedia framework to build multimedia applications. An application consists of a number of components which together form a graph structure. Each component runs as an actor. There is an actor called environment which is responsible for creating components of an application as actors dynamically.
